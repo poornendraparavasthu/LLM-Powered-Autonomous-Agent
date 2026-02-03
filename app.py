@@ -27,6 +27,12 @@ def index():
         }
     })
 
+@app.route("/health",methods=["GET"])
+def health():
+    model = request.args.get("model",planner.DEFAULT_MODEL)
+    status = planner.test_ollama_connection(model)
+    return jsonify(status)
+
 if __name__ == "__main__":
     print("="*60)
     print("flask llm command executor with (with user confirmation)")
