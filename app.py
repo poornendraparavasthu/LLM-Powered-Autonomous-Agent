@@ -27,3 +27,16 @@ def index():
         }
     })
 
+if __name__ == "__main__":
+    print("="*60)
+    print("flask llm command executor with (with user confirmation)")
+    print("="*60)
+    print("starting server on http://localhost:5000")
+    print("\nEndpoints:")
+    print(" GET / - Service info")
+    print(" GET /health - Check ollama connection")
+    print(" GET /tools - List available tools")
+    print("Post /command - Generate plan (requires confirmation)")
+    print("Post /confirm - Execute confirmed plan")
+    print("="*60)
+    app.run(host="0.0.0.0", port=5000, debug=True)
