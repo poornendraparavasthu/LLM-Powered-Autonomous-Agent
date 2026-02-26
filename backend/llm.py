@@ -36,3 +36,6 @@ while True:
         response_content += content
     print()
     messages.append({'role':'assistant','content':response_content})
+    
+    
+    hi this is new 
