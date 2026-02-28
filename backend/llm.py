@@ -38,7 +38,4 @@ while True:
     messages.append({'role':'assistant','content':response_content})
     
     
-    hi this is new 
-    
-    
-    alkdjflkjsdfj
+   
