@@ -1,47 +1,72 @@
 require("dotenv").config();
 
-const express = require("express");
-const cors = require("cors");
+const http = require("http");
+const WebSocket = require("ws");
+const pty = require("node-pty");
+
 const { generateCommand } = require("./gemini");
 const { detectDistro } = require("./distro");
-const { runCommand } = require("./executor");
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+const server = http.createServer();
+const wss = new WebSocket.Server({ server });
 
-app.post("/generate", async (req, res) => {
-  const { input } = req.body;
+wss.on("connection", (ws) => {
+  console.log("Client connected");
 
-  if (!input) {
-    return res.status(400).json({ error: "Input required" });
-  }
+  // Create one shell per client
+  const shell = pty.spawn("bash", [], {
+    name: "xterm-color",
+    cols: 80,
+    rows: 30,
+    cwd: process.cwd(),
+    env: process.env
+  });
 
-  const distro = detectDistro();  // Automatically detect
+  // Stream shell output to client
+  shell.onData((data) => {
+    ws.send(JSON.stringify({
+      type: "output",
+      data
+    }));
+  });
+
+ ws.on("message", async (message) => {
+  const text = message.toString();
 
   try {
-    const result = await generateCommand(input, distro);
-    res.json({
-      distro,
-      ...result
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const msg = JSON.parse(text);
+
+    // AI GENERATION
+    if (msg.type === "generate") {
+      const distro = detectDistro();
+      const result = await generateCommand(msg.input, distro);
+
+      ws.send(JSON.stringify({
+        type: "generated",
+        distro,
+        ...result
+      }));
+      return;
+    }
+
+    // RUN COMMAND (single-shot)
+    if (msg.type === "run") {
+      shell.write(msg.command + "\n");
+      return;
+    }
+
+  } catch {
+    // Not JSON → treat as interactive shell input
+    shell.write(text);
   }
+  });
+
+  ws.on("close", () => {
+    console.log("Client disconnected");
+    shell.kill();
+  });
 });
 
-app.post("/run", async (req, res) => {
-  const { command } = req.body;
-
-  if (!command) {
-    return res.status(400).json({ error: "Command required" });
-  }
-
-  const result = await runCommand(command);
-
-  res.json(result);
-});
-
-app.listen(process.env.PORT || 3000, () => {
-  console.log("Server running...");
+server.listen(3000, () => {
+  console.log("WebSocket server running on port 3000");
 });

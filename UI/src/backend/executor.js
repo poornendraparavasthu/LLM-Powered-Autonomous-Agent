@@ -1,26 +1,43 @@
-const { exec } = require("child_process");
+const pty = require("node-pty");
 
 /**
- * Executes a shell command safely
+ * Runs a command in a pseudo-terminal (interactive)
  * @param {string} command
+ * @param {function} onData - callback for streaming output
  * @returns {Promise<Object>}
  */
-function runCommand(command) {
+function runCommand(command, onData) {
   return new Promise((resolve) => {
 
-    exec(command, { timeout: 15000 }, (error, stdout, stderr) => {
-      if (error) {
-        return resolve({
-          success: false,
-          error: stderr || error.message
-        });
-      }
+    const shell = pty.spawn("bash", [], {
+      name: "xterm-color",
+      cols: 80,
+      rows: 30,
+      cwd: process.cwd(),
+      env: process.env
+    });
 
+    let fullOutput = "";
+
+    shell.onData((data) => {
+      fullOutput += data;
+
+      // Stream output to caller (optional)
+      if (onData) {
+        onData(data);
+      }
+    });
+
+    shell.onExit(({ exitCode }) => {
       resolve({
-        success: true,
-        output: stdout
+        success: exitCode === 0,
+        output: fullOutput,
+        exitCode
       });
     });
+
+    // Execute command
+    shell.write(command + "\r");
   });
 }
 
