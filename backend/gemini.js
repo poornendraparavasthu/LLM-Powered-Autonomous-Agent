@@ -35,7 +35,7 @@ STRICT RULES:
 - Do not give cd commands.
 - No code blocks.
 - Commands must be compatible with ${distro}.
-- Do not give complex chained commands.
+- Do not give nano commands, use echo with redirection instead.
 
 Return format:
 {
