@@ -4,16 +4,70 @@ const http = require("http");
 const WebSocket = require("ws");
 const pty = require("node-pty");
 
-const { generateCommand, explainCommand } = require("./gemini");
+const { generateCommand } = require("./gemini");
 const { detectDistro } = require("./distro");
 const { searchKnowledge } = require("./rag/search");
 const { normalizePrompt } = require("./rag/normalize");
-const { simplifyTask } = require("./rag/simplify");   // NEW
+const { simplifyTask } = require("./rag/simplify");
 const { validateCommand } = require("./validator");
 const { updateKnowledge } = require("./rag/updateKnowledge");
 const { planTasks } = require("./planner");
+const { generateLocalCommand } = require("./llm/commandGenerator");
+
+const axios = require("axios");
 
 const PORT = 3000;
+
+
+/*
+---------------------------------------
+LOCAL LLM COMMAND EXPLANATION
+---------------------------------------
+*/
+
+async function explainCommand(command) {
+
+  try {
+
+    const response = await axios.post(
+      "http://localhost:11434/api/generate",
+      {
+        model: "mistral",
+        prompt: `
+You are a Linux expert.
+
+Explain the following command clearly for beginners.
+
+Command:
+${command}
+
+Rules:
+- Explain what the command does
+- Explain important flags/options
+- Maximum 5 lines
+- No markdown
+`,
+        stream: false
+      }
+    );
+
+    const explanation = response?.data?.response;
+
+    if (!explanation) {
+      return "Unable to generate explanation.";
+    }
+
+    return explanation.trim();
+
+  } catch (error) {
+
+    console.error("Local LLM Explain Error:", error.message);
+
+    return "Unable to generate explanation.";
+
+  }
+
+}
 
 
 /*
@@ -46,6 +100,7 @@ const server = http.createServer(async (req, res) => {
     }));
 
     return;
+
   }
 
   /*
@@ -93,6 +148,7 @@ const server = http.createServer(async (req, res) => {
     });
 
     return;
+
   }
 
   res.writeHead(404);
@@ -157,7 +213,7 @@ wss.on("connection", (ws) => {
 
       /*
       ---------------------------------------
-      GENERATE COMMANDS (WITH PLANNER)
+      GENERATE COMMANDS
       ---------------------------------------
       */
 
@@ -180,6 +236,8 @@ wss.on("connection", (ws) => {
           console.log("Planned tasks:", tasks);
 
           const steps = [];
+          const seenTasks = new Set();
+          const seenCommands = new Set();
 
           /*
           STEP 2 — PROCESS TASKS
@@ -190,11 +248,15 @@ wss.on("connection", (ws) => {
             try {
 
               const normalizedTask = normalizePrompt(task);
-
-              // NEW STEP
               const simplifiedTask = simplifyTask(normalizedTask);
 
-              console.log("Simplified task:", simplifiedTask);
+              if (seenTasks.has(simplifiedTask)) {
+                continue;
+              }
+
+              seenTasks.add(simplifiedTask);
+
+              console.log("Processing task:", simplifiedTask);
 
               /*
               RAG SEARCH
@@ -204,30 +266,73 @@ wss.on("connection", (ws) => {
 
               if (ragResult) {
 
-                console.log("RAG HIT:", simplifiedTask);
+                const commands = ragResult.commands.filter(cmd => {
+
+                  if (seenCommands.has(cmd)) return false;
+
+                  seenCommands.add(cmd);
+                  return true;
+
+                });
 
                 steps.push({
                   task: simplifiedTask,
                   source: "rag",
-                  commands: ragResult.commands || [],
+                  commands,
                   risk: ragResult.risk || "low"
                 });
 
                 continue;
+
+              }
+
+              /*
+              LOCAL LLM COMMAND GENERATOR
+              */
+
+              const localResult = await generateLocalCommand(simplifiedTask, distro);
+
+              if (localResult && localResult.commands) {
+
+                const commands = localResult.commands.filter(cmd => {
+
+                  if (seenCommands.has(cmd)) return false;
+
+                  seenCommands.add(cmd);
+                  return true;
+
+                });
+
+                steps.push({
+                  task: simplifiedTask,
+                  source: "local-llm",
+                  commands,
+                  risk: localResult.risk || "low"
+                });
+
+                continue;
+
               }
 
               /*
               GEMINI FALLBACK
               */
 
-              console.log("Gemini fallback:", simplifiedTask);
-
               const result = await generateCommand(simplifiedTask, distro);
+
+              const commands = result.commands.filter(cmd => {
+
+                if (seenCommands.has(cmd)) return false;
+
+                seenCommands.add(cmd);
+                return true;
+
+              });
 
               steps.push({
                 task: simplifiedTask,
                 source: "gemini",
-                commands: result.commands || [],
+                commands,
                 risk: result.risk || "low"
               });
 
@@ -268,6 +373,7 @@ wss.on("connection", (ws) => {
         }
 
         return;
+
       }
 
 
@@ -289,6 +395,7 @@ wss.on("connection", (ws) => {
           }));
 
           return;
+
         }
 
         /*
@@ -305,25 +412,25 @@ wss.on("connection", (ws) => {
           );
 
           console.log("Knowledge updated:", lastNormalizedPrompt);
+
         }
 
         shell.write(msg.command + "\n");
 
         return;
+
       }
 
 
       /*
-      ---------------------------------------
       TERMINAL INPUT
-      ---------------------------------------
       */
 
       if (msg.type === "input") {
 
         shell.write(msg.data);
-
         return;
+
       }
 
     } catch (err) {
@@ -344,7 +451,6 @@ wss.on("connection", (ws) => {
   ws.on("close", () => {
 
     console.log("Client disconnected");
-
     shell.kill();
 
   });

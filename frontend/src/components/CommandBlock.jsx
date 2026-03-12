@@ -38,8 +38,7 @@ export default function CommandBlock({ command, onRun, onExplain }) {
 
     if (loading) return;
 
-    /* explanation already cached */
-
+    // If explanation already exists → toggle
     if (explanation) {
       setShowExplanation(prev => !prev);
       return;
@@ -68,7 +67,7 @@ export default function CommandBlock({ command, onRun, onExplain }) {
 
     <div className="group space-y-2">
 
-      {/* Command Row */}
+      {/* COMMAND ROW */}
 
       <div className="
         flex items-center gap-3
@@ -79,7 +78,7 @@ export default function CommandBlock({ command, onRun, onExplain }) {
         transition-all duration-200
       ">
 
-        {/* Command */}
+        {/* COMMAND TEXT */}
 
         <code className="
           flex-1
@@ -93,7 +92,7 @@ export default function CommandBlock({ command, onRun, onExplain }) {
           {command}
         </code>
 
-        {/* Explain Button */}
+        {/* EXPLAIN BUTTON */}
 
         <button
           onClick={handleExplain}
@@ -115,7 +114,7 @@ export default function CommandBlock({ command, onRun, onExplain }) {
           {loading ? "Loading..." : "Explain"}
         </button>
 
-        {/* Run Button */}
+        {/* RUN BUTTON */}
 
         <button
           onClick={handleRun}
@@ -141,33 +140,36 @@ export default function CommandBlock({ command, onRun, onExplain }) {
 
       </div>
 
-      {/* Explanation Panel */}
+      {/* EXPLANATION PANEL */}
 
-      <div
-        className={`
-          overflow-hidden
-          transition-all duration-300 ease-in-out
-          ${showExplanation ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
-        `}
-      >
+      {showExplanation && explanation && (
 
-        {explanation && (
-
-          <div className="
-            p-3 rounded-lg
+        <div
+          className="
+            mt-2
+            p-3
+            rounded-lg
             bg-[#10141f]
             border border-[#2a2a3e]
             text-sm
             text-[#b7f5b1]
             font-mono
             leading-relaxed
-          ">
-            {explanation}
+            animate-in fade-in duration-200
+          "
+        >
+
+          {/* Label */}
+
+          <div className="text-xs text-[#00ff88] mb-1 font-semibold">
+            AI Explanation
           </div>
 
-        )}
+          {explanation}
 
-      </div>
+        </div>
+
+      )}
 
     </div>
 
