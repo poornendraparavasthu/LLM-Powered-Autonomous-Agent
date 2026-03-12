@@ -1,0 +1,2466 @@
+[
+  {
+    "task": "install nginx",
+    "arch": "sudo pacman -S nginx",
+    "ubuntu": "sudo apt install nginx",
+    "fedora": "sudo dnf install nginx",
+    "risk": "low"
+  },
+  {
+    "task": "download nginx",
+    "arch": "sudo pacman -S nginx",
+    "ubuntu": "sudo apt install nginx",
+    "fedora": "sudo dnf install nginx",
+    "risk": "low"
+  },
+  {
+    "task": "setup nginx",
+    "arch": "sudo pacman -S nginx",
+    "ubuntu": "sudo apt install nginx",
+    "fedora": "sudo dnf install nginx",
+    "risk": "low"
+  },
+  {
+    "task": "add nginx",
+    "arch": "sudo pacman -S nginx",
+    "ubuntu": "sudo apt install nginx",
+    "fedora": "sudo dnf install nginx",
+    "risk": "low"
+  },
+  {
+    "task": "install docker",
+    "arch": "sudo pacman -S docker",
+    "ubuntu": "sudo apt install docker",
+    "fedora": "sudo dnf install docker",
+    "risk": "low"
+  },
+  {
+    "task": "download docker",
+    "arch": "sudo pacman -S docker",
+    "ubuntu": "sudo apt install docker",
+    "fedora": "sudo dnf install docker",
+    "risk": "low"
+  },
+  {
+    "task": "setup docker",
+    "arch": "sudo pacman -S docker",
+    "ubuntu": "sudo apt install docker",
+    "fedora": "sudo dnf install docker",
+    "risk": "low"
+  },
+  {
+    "task": "add docker",
+    "arch": "sudo pacman -S docker",
+    "ubuntu": "sudo apt install docker",
+    "fedora": "sudo dnf install docker",
+    "risk": "low"
+  },
+  {
+    "task": "install nodejs",
+    "arch": "sudo pacman -S nodejs",
+    "ubuntu": "sudo apt install nodejs",
+    "fedora": "sudo dnf install nodejs",
+    "risk": "low"
+  },
+  {
+    "task": "download nodejs",
+    "arch": "sudo pacman -S nodejs",
+    "ubuntu": "sudo apt install nodejs",
+    "fedora": "sudo dnf install nodejs",
+    "risk": "low"
+  },
+  {
+    "task": "setup nodejs",
+    "arch": "sudo pacman -S nodejs",
+    "ubuntu": "sudo apt install nodejs",
+    "fedora": "sudo dnf install nodejs",
+    "risk": "low"
+  },
+  {
+    "task": "add nodejs",
+    "arch": "sudo pacman -S nodejs",
+    "ubuntu": "sudo apt install nodejs",
+    "fedora": "sudo dnf install nodejs",
+    "risk": "low"
+  },
+  {
+    "task": "install python",
+    "arch": "sudo pacman -S python",
+    "ubuntu": "sudo apt install python",
+    "fedora": "sudo dnf install python",
+    "risk": "low"
+  },
+  {
+    "task": "download python",
+    "arch": "sudo pacman -S python",
+    "ubuntu": "sudo apt install python",
+    "fedora": "sudo dnf install python",
+    "risk": "low"
+  },
+  {
+    "task": "setup python",
+    "arch": "sudo pacman -S python",
+    "ubuntu": "sudo apt install python",
+    "fedora": "sudo dnf install python",
+    "risk": "low"
+  },
+  {
+    "task": "add python",
+    "arch": "sudo pacman -S python",
+    "ubuntu": "sudo apt install python",
+    "fedora": "sudo dnf install python",
+    "risk": "low"
+  },
+  {
+    "task": "install git",
+    "arch": "sudo pacman -S git",
+    "ubuntu": "sudo apt install git",
+    "fedora": "sudo dnf install git",
+    "risk": "low"
+  },
+  {
+    "task": "download git",
+    "arch": "sudo pacman -S git",
+    "ubuntu": "sudo apt install git",
+    "fedora": "sudo dnf install git",
+    "risk": "low"
+  },
+  {
+    "task": "setup git",
+    "arch": "sudo pacman -S git",
+    "ubuntu": "sudo apt install git",
+    "fedora": "sudo dnf install git",
+    "risk": "low"
+  },
+  {
+    "task": "add git",
+    "arch": "sudo pacman -S git",
+    "ubuntu": "sudo apt install git",
+    "fedora": "sudo dnf install git",
+    "risk": "low"
+  },
+  {
+    "task": "install neovim",
+    "arch": "sudo pacman -S neovim",
+    "ubuntu": "sudo apt install neovim",
+    "fedora": "sudo dnf install neovim",
+    "risk": "low"
+  },
+  {
+    "task": "download neovim",
+    "arch": "sudo pacman -S neovim",
+    "ubuntu": "sudo apt install neovim",
+    "fedora": "sudo dnf install neovim",
+    "risk": "low"
+  },
+  {
+    "task": "setup neovim",
+    "arch": "sudo pacman -S neovim",
+    "ubuntu": "sudo apt install neovim",
+    "fedora": "sudo dnf install neovim",
+    "risk": "low"
+  },
+  {
+    "task": "add neovim",
+    "arch": "sudo pacman -S neovim",
+    "ubuntu": "sudo apt install neovim",
+    "fedora": "sudo dnf install neovim",
+    "risk": "low"
+  },
+  {
+    "task": "install htop",
+    "arch": "sudo pacman -S htop",
+    "ubuntu": "sudo apt install htop",
+    "fedora": "sudo dnf install htop",
+    "risk": "low"
+  },
+  {
+    "task": "download htop",
+    "arch": "sudo pacman -S htop",
+    "ubuntu": "sudo apt install htop",
+    "fedora": "sudo dnf install htop",
+    "risk": "low"
+  },
+  {
+    "task": "setup htop",
+    "arch": "sudo pacman -S htop",
+    "ubuntu": "sudo apt install htop",
+    "fedora": "sudo dnf install htop",
+    "risk": "low"
+  },
+  {
+    "task": "add htop",
+    "arch": "sudo pacman -S htop",
+    "ubuntu": "sudo apt install htop",
+    "fedora": "sudo dnf install htop",
+    "risk": "low"
+  },
+  {
+    "task": "install tmux",
+    "arch": "sudo pacman -S tmux",
+    "ubuntu": "sudo apt install tmux",
+    "fedora": "sudo dnf install tmux",
+    "risk": "low"
+  },
+  {
+    "task": "download tmux",
+    "arch": "sudo pacman -S tmux",
+    "ubuntu": "sudo apt install tmux",
+    "fedora": "sudo dnf install tmux",
+    "risk": "low"
+  },
+  {
+    "task": "setup tmux",
+    "arch": "sudo pacman -S tmux",
+    "ubuntu": "sudo apt install tmux",
+    "fedora": "sudo dnf install tmux",
+    "risk": "low"
+  },
+  {
+    "task": "add tmux",
+    "arch": "sudo pacman -S tmux",
+    "ubuntu": "sudo apt install tmux",
+    "fedora": "sudo dnf install tmux",
+    "risk": "low"
+  },
+  {
+    "task": "install curl",
+    "arch": "sudo pacman -S curl",
+    "ubuntu": "sudo apt install curl",
+    "fedora": "sudo dnf install curl",
+    "risk": "low"
+  },
+  {
+    "task": "download curl",
+    "arch": "sudo pacman -S curl",
+    "ubuntu": "sudo apt install curl",
+    "fedora": "sudo dnf install curl",
+    "risk": "low"
+  },
+  {
+    "task": "setup curl",
+    "arch": "sudo pacman -S curl",
+    "ubuntu": "sudo apt install curl",
+    "fedora": "sudo dnf install curl",
+    "risk": "low"
+  },
+  {
+    "task": "add curl",
+    "arch": "sudo pacman -S curl",
+    "ubuntu": "sudo apt install curl",
+    "fedora": "sudo dnf install curl",
+    "risk": "low"
+  },
+  {
+    "task": "install wget",
+    "arch": "sudo pacman -S wget",
+    "ubuntu": "sudo apt install wget",
+    "fedora": "sudo dnf install wget",
+    "risk": "low"
+  },
+  {
+    "task": "download wget",
+    "arch": "sudo pacman -S wget",
+    "ubuntu": "sudo apt install wget",
+    "fedora": "sudo dnf install wget",
+    "risk": "low"
+  },
+  {
+    "task": "setup wget",
+    "arch": "sudo pacman -S wget",
+    "ubuntu": "sudo apt install wget",
+    "fedora": "sudo dnf install wget",
+    "risk": "low"
+  },
+  {
+    "task": "add wget",
+    "arch": "sudo pacman -S wget",
+    "ubuntu": "sudo apt install wget",
+    "fedora": "sudo dnf install wget",
+    "risk": "low"
+  },
+  {
+    "task": "install postgresql",
+    "arch": "sudo pacman -S postgresql",
+    "ubuntu": "sudo apt install postgresql",
+    "fedora": "sudo dnf install postgresql",
+    "risk": "low"
+  },
+  {
+    "task": "download postgresql",
+    "arch": "sudo pacman -S postgresql",
+    "ubuntu": "sudo apt install postgresql",
+    "fedora": "sudo dnf install postgresql",
+    "risk": "low"
+  },
+  {
+    "task": "setup postgresql",
+    "arch": "sudo pacman -S postgresql",
+    "ubuntu": "sudo apt install postgresql",
+    "fedora": "sudo dnf install postgresql",
+    "risk": "low"
+  },
+  {
+    "task": "add postgresql",
+    "arch": "sudo pacman -S postgresql",
+    "ubuntu": "sudo apt install postgresql",
+    "fedora": "sudo dnf install postgresql",
+    "risk": "low"
+  },
+  {
+    "task": "install redis",
+    "arch": "sudo pacman -S redis",
+    "ubuntu": "sudo apt install redis",
+    "fedora": "sudo dnf install redis",
+    "risk": "low"
+  },
+  {
+    "task": "download redis",
+    "arch": "sudo pacman -S redis",
+    "ubuntu": "sudo apt install redis",
+    "fedora": "sudo dnf install redis",
+    "risk": "low"
+  },
+  {
+    "task": "setup redis",
+    "arch": "sudo pacman -S redis",
+    "ubuntu": "sudo apt install redis",
+    "fedora": "sudo dnf install redis",
+    "risk": "low"
+  },
+  {
+    "task": "add redis",
+    "arch": "sudo pacman -S redis",
+    "ubuntu": "sudo apt install redis",
+    "fedora": "sudo dnf install redis",
+    "risk": "low"
+  },
+  {
+    "task": "install mysql",
+    "arch": "sudo pacman -S mysql",
+    "ubuntu": "sudo apt install mysql",
+    "fedora": "sudo dnf install mysql",
+    "risk": "low"
+  },
+  {
+    "task": "download mysql",
+    "arch": "sudo pacman -S mysql",
+    "ubuntu": "sudo apt install mysql",
+    "fedora": "sudo dnf install mysql",
+    "risk": "low"
+  },
+  {
+    "task": "setup mysql",
+    "arch": "sudo pacman -S mysql",
+    "ubuntu": "sudo apt install mysql",
+    "fedora": "sudo dnf install mysql",
+    "risk": "low"
+  },
+  {
+    "task": "add mysql",
+    "arch": "sudo pacman -S mysql",
+    "ubuntu": "sudo apt install mysql",
+    "fedora": "sudo dnf install mysql",
+    "risk": "low"
+  },
+  {
+    "task": "install firefox",
+    "arch": "sudo pacman -S firefox",
+    "ubuntu": "sudo apt install firefox",
+    "fedora": "sudo dnf install firefox",
+    "risk": "low"
+  },
+  {
+    "task": "download firefox",
+    "arch": "sudo pacman -S firefox",
+    "ubuntu": "sudo apt install firefox",
+    "fedora": "sudo dnf install firefox",
+    "risk": "low"
+  },
+  {
+    "task": "setup firefox",
+    "arch": "sudo pacman -S firefox",
+    "ubuntu": "sudo apt install firefox",
+    "fedora": "sudo dnf install firefox",
+    "risk": "low"
+  },
+  {
+    "task": "add firefox",
+    "arch": "sudo pacman -S firefox",
+    "ubuntu": "sudo apt install firefox",
+    "fedora": "sudo dnf install firefox",
+    "risk": "low"
+  },
+  {
+    "task": "install chromium",
+    "arch": "sudo pacman -S chromium",
+    "ubuntu": "sudo apt install chromium",
+    "fedora": "sudo dnf install chromium",
+    "risk": "low"
+  },
+  {
+    "task": "download chromium",
+    "arch": "sudo pacman -S chromium",
+    "ubuntu": "sudo apt install chromium",
+    "fedora": "sudo dnf install chromium",
+    "risk": "low"
+  },
+  {
+    "task": "setup chromium",
+    "arch": "sudo pacman -S chromium",
+    "ubuntu": "sudo apt install chromium",
+    "fedora": "sudo dnf install chromium",
+    "risk": "low"
+  },
+  {
+    "task": "add chromium",
+    "arch": "sudo pacman -S chromium",
+    "ubuntu": "sudo apt install chromium",
+    "fedora": "sudo dnf install chromium",
+    "risk": "low"
+  },
+  {
+    "task": "install vim",
+    "arch": "sudo pacman -S vim",
+    "ubuntu": "sudo apt install vim",
+    "fedora": "sudo dnf install vim",
+    "risk": "low"
+  },
+  {
+    "task": "download vim",
+    "arch": "sudo pacman -S vim",
+    "ubuntu": "sudo apt install vim",
+    "fedora": "sudo dnf install vim",
+    "risk": "low"
+  },
+  {
+    "task": "setup vim",
+    "arch": "sudo pacman -S vim",
+    "ubuntu": "sudo apt install vim",
+    "fedora": "sudo dnf install vim",
+    "risk": "low"
+  },
+  {
+    "task": "add vim",
+    "arch": "sudo pacman -S vim",
+    "ubuntu": "sudo apt install vim",
+    "fedora": "sudo dnf install vim",
+    "risk": "low"
+  },
+  {
+    "task": "install nano",
+    "arch": "sudo pacman -S nano",
+    "ubuntu": "sudo apt install nano",
+    "fedora": "sudo dnf install nano",
+    "risk": "low"
+  },
+  {
+    "task": "download nano",
+    "arch": "sudo pacman -S nano",
+    "ubuntu": "sudo apt install nano",
+    "fedora": "sudo dnf install nano",
+    "risk": "low"
+  },
+  {
+    "task": "setup nano",
+    "arch": "sudo pacman -S nano",
+    "ubuntu": "sudo apt install nano",
+    "fedora": "sudo dnf install nano",
+    "risk": "low"
+  },
+  {
+    "task": "add nano",
+    "arch": "sudo pacman -S nano",
+    "ubuntu": "sudo apt install nano",
+    "fedora": "sudo dnf install nano",
+    "risk": "low"
+  },
+  {
+    "task": "install openssh",
+    "arch": "sudo pacman -S openssh",
+    "ubuntu": "sudo apt install openssh",
+    "fedora": "sudo dnf install openssh",
+    "risk": "low"
+  },
+  {
+    "task": "download openssh",
+    "arch": "sudo pacman -S openssh",
+    "ubuntu": "sudo apt install openssh",
+    "fedora": "sudo dnf install openssh",
+    "risk": "low"
+  },
+  {
+    "task": "setup openssh",
+    "arch": "sudo pacman -S openssh",
+    "ubuntu": "sudo apt install openssh",
+    "fedora": "sudo dnf install openssh",
+    "risk": "low"
+  },
+  {
+    "task": "add openssh",
+    "arch": "sudo pacman -S openssh",
+    "ubuntu": "sudo apt install openssh",
+    "fedora": "sudo dnf install openssh",
+    "risk": "low"
+  },
+  {
+    "task": "install gcc",
+    "arch": "sudo pacman -S gcc",
+    "ubuntu": "sudo apt install gcc",
+    "fedora": "sudo dnf install gcc",
+    "risk": "low"
+  },
+  {
+    "task": "download gcc",
+    "arch": "sudo pacman -S gcc",
+    "ubuntu": "sudo apt install gcc",
+    "fedora": "sudo dnf install gcc",
+    "risk": "low"
+  },
+  {
+    "task": "setup gcc",
+    "arch": "sudo pacman -S gcc",
+    "ubuntu": "sudo apt install gcc",
+    "fedora": "sudo dnf install gcc",
+    "risk": "low"
+  },
+  {
+    "task": "add gcc",
+    "arch": "sudo pacman -S gcc",
+    "ubuntu": "sudo apt install gcc",
+    "fedora": "sudo dnf install gcc",
+    "risk": "low"
+  },
+  {
+    "task": "install make",
+    "arch": "sudo pacman -S make",
+    "ubuntu": "sudo apt install make",
+    "fedora": "sudo dnf install make",
+    "risk": "low"
+  },
+  {
+    "task": "download make",
+    "arch": "sudo pacman -S make",
+    "ubuntu": "sudo apt install make",
+    "fedora": "sudo dnf install make",
+    "risk": "low"
+  },
+  {
+    "task": "setup make",
+    "arch": "sudo pacman -S make",
+    "ubuntu": "sudo apt install make",
+    "fedora": "sudo dnf install make",
+    "risk": "low"
+  },
+  {
+    "task": "add make",
+    "arch": "sudo pacman -S make",
+    "ubuntu": "sudo apt install make",
+    "fedora": "sudo dnf install make",
+    "risk": "low"
+  },
+  {
+    "task": "install cmake",
+    "arch": "sudo pacman -S cmake",
+    "ubuntu": "sudo apt install cmake",
+    "fedora": "sudo dnf install cmake",
+    "risk": "low"
+  },
+  {
+    "task": "download cmake",
+    "arch": "sudo pacman -S cmake",
+    "ubuntu": "sudo apt install cmake",
+    "fedora": "sudo dnf install cmake",
+    "risk": "low"
+  },
+  {
+    "task": "setup cmake",
+    "arch": "sudo pacman -S cmake",
+    "ubuntu": "sudo apt install cmake",
+    "fedora": "sudo dnf install cmake",
+    "risk": "low"
+  },
+  {
+    "task": "add cmake",
+    "arch": "sudo pacman -S cmake",
+    "ubuntu": "sudo apt install cmake",
+    "fedora": "sudo dnf install cmake",
+    "risk": "low"
+  },
+  {
+    "task": "install npm",
+    "arch": "sudo pacman -S npm",
+    "ubuntu": "sudo apt install npm",
+    "fedora": "sudo dnf install npm",
+    "risk": "low"
+  },
+  {
+    "task": "download npm",
+    "arch": "sudo pacman -S npm",
+    "ubuntu": "sudo apt install npm",
+    "fedora": "sudo dnf install npm",
+    "risk": "low"
+  },
+  {
+    "task": "setup npm",
+    "arch": "sudo pacman -S npm",
+    "ubuntu": "sudo apt install npm",
+    "fedora": "sudo dnf install npm",
+    "risk": "low"
+  },
+  {
+    "task": "add npm",
+    "arch": "sudo pacman -S npm",
+    "ubuntu": "sudo apt install npm",
+    "fedora": "sudo dnf install npm",
+    "risk": "low"
+  },
+  {
+    "task": "install yarn",
+    "arch": "sudo pacman -S yarn",
+    "ubuntu": "sudo apt install yarn",
+    "fedora": "sudo dnf install yarn",
+    "risk": "low"
+  },
+  {
+    "task": "download yarn",
+    "arch": "sudo pacman -S yarn",
+    "ubuntu": "sudo apt install yarn",
+    "fedora": "sudo dnf install yarn",
+    "risk": "low"
+  },
+  {
+    "task": "setup yarn",
+    "arch": "sudo pacman -S yarn",
+    "ubuntu": "sudo apt install yarn",
+    "fedora": "sudo dnf install yarn",
+    "risk": "low"
+  },
+  {
+    "task": "add yarn",
+    "arch": "sudo pacman -S yarn",
+    "ubuntu": "sudo apt install yarn",
+    "fedora": "sudo dnf install yarn",
+    "risk": "low"
+  },
+  {
+    "task": "install go",
+    "arch": "sudo pacman -S go",
+    "ubuntu": "sudo apt install go",
+    "fedora": "sudo dnf install go",
+    "risk": "low"
+  },
+  {
+    "task": "download go",
+    "arch": "sudo pacman -S go",
+    "ubuntu": "sudo apt install go",
+    "fedora": "sudo dnf install go",
+    "risk": "low"
+  },
+  {
+    "task": "setup go",
+    "arch": "sudo pacman -S go",
+    "ubuntu": "sudo apt install go",
+    "fedora": "sudo dnf install go",
+    "risk": "low"
+  },
+  {
+    "task": "add go",
+    "arch": "sudo pacman -S go",
+    "ubuntu": "sudo apt install go",
+    "fedora": "sudo dnf install go",
+    "risk": "low"
+  },
+  {
+    "task": "install rust",
+    "arch": "sudo pacman -S rust",
+    "ubuntu": "sudo apt install rust",
+    "fedora": "sudo dnf install rust",
+    "risk": "low"
+  },
+  {
+    "task": "download rust",
+    "arch": "sudo pacman -S rust",
+    "ubuntu": "sudo apt install rust",
+    "fedora": "sudo dnf install rust",
+    "risk": "low"
+  },
+  {
+    "task": "setup rust",
+    "arch": "sudo pacman -S rust",
+    "ubuntu": "sudo apt install rust",
+    "fedora": "sudo dnf install rust",
+    "risk": "low"
+  },
+  {
+    "task": "add rust",
+    "arch": "sudo pacman -S rust",
+    "ubuntu": "sudo apt install rust",
+    "fedora": "sudo dnf install rust",
+    "risk": "low"
+  },
+  {
+    "task": "install php",
+    "arch": "sudo pacman -S php",
+    "ubuntu": "sudo apt install php",
+    "fedora": "sudo dnf install php",
+    "risk": "low"
+  },
+  {
+    "task": "download php",
+    "arch": "sudo pacman -S php",
+    "ubuntu": "sudo apt install php",
+    "fedora": "sudo dnf install php",
+    "risk": "low"
+  },
+  {
+    "task": "setup php",
+    "arch": "sudo pacman -S php",
+    "ubuntu": "sudo apt install php",
+    "fedora": "sudo dnf install php",
+    "risk": "low"
+  },
+  {
+    "task": "add php",
+    "arch": "sudo pacman -S php",
+    "ubuntu": "sudo apt install php",
+    "fedora": "sudo dnf install php",
+    "risk": "low"
+  },
+  {
+    "task": "install ruby",
+    "arch": "sudo pacman -S ruby",
+    "ubuntu": "sudo apt install ruby",
+    "fedora": "sudo dnf install ruby",
+    "risk": "low"
+  },
+  {
+    "task": "download ruby",
+    "arch": "sudo pacman -S ruby",
+    "ubuntu": "sudo apt install ruby",
+    "fedora": "sudo dnf install ruby",
+    "risk": "low"
+  },
+  {
+    "task": "setup ruby",
+    "arch": "sudo pacman -S ruby",
+    "ubuntu": "sudo apt install ruby",
+    "fedora": "sudo dnf install ruby",
+    "risk": "low"
+  },
+  {
+    "task": "add ruby",
+    "arch": "sudo pacman -S ruby",
+    "ubuntu": "sudo apt install ruby",
+    "fedora": "sudo dnf install ruby",
+    "risk": "low"
+  },
+  {
+    "task": "install perl",
+    "arch": "sudo pacman -S perl",
+    "ubuntu": "sudo apt install perl",
+    "fedora": "sudo dnf install perl",
+    "risk": "low"
+  },
+  {
+    "task": "download perl",
+    "arch": "sudo pacman -S perl",
+    "ubuntu": "sudo apt install perl",
+    "fedora": "sudo dnf install perl",
+    "risk": "low"
+  },
+  {
+    "task": "setup perl",
+    "arch": "sudo pacman -S perl",
+    "ubuntu": "sudo apt install perl",
+    "fedora": "sudo dnf install perl",
+    "risk": "low"
+  },
+  {
+    "task": "add perl",
+    "arch": "sudo pacman -S perl",
+    "ubuntu": "sudo apt install perl",
+    "fedora": "sudo dnf install perl",
+    "risk": "low"
+  },
+  {
+    "task": "install clang",
+    "arch": "sudo pacman -S clang",
+    "ubuntu": "sudo apt install clang",
+    "fedora": "sudo dnf install clang",
+    "risk": "low"
+  },
+  {
+    "task": "download clang",
+    "arch": "sudo pacman -S clang",
+    "ubuntu": "sudo apt install clang",
+    "fedora": "sudo dnf install clang",
+    "risk": "low"
+  },
+  {
+    "task": "setup clang",
+    "arch": "sudo pacman -S clang",
+    "ubuntu": "sudo apt install clang",
+    "fedora": "sudo dnf install clang",
+    "risk": "low"
+  },
+  {
+    "task": "add clang",
+    "arch": "sudo pacman -S clang",
+    "ubuntu": "sudo apt install clang",
+    "fedora": "sudo dnf install clang",
+    "risk": "low"
+  },
+  {
+    "task": "install gdb",
+    "arch": "sudo pacman -S gdb",
+    "ubuntu": "sudo apt install gdb",
+    "fedora": "sudo dnf install gdb",
+    "risk": "low"
+  },
+  {
+    "task": "download gdb",
+    "arch": "sudo pacman -S gdb",
+    "ubuntu": "sudo apt install gdb",
+    "fedora": "sudo dnf install gdb",
+    "risk": "low"
+  },
+  {
+    "task": "setup gdb",
+    "arch": "sudo pacman -S gdb",
+    "ubuntu": "sudo apt install gdb",
+    "fedora": "sudo dnf install gdb",
+    "risk": "low"
+  },
+  {
+    "task": "add gdb",
+    "arch": "sudo pacman -S gdb",
+    "ubuntu": "sudo apt install gdb",
+    "fedora": "sudo dnf install gdb",
+    "risk": "low"
+  },
+  {
+    "task": "install tree",
+    "arch": "sudo pacman -S tree",
+    "ubuntu": "sudo apt install tree",
+    "fedora": "sudo dnf install tree",
+    "risk": "low"
+  },
+  {
+    "task": "download tree",
+    "arch": "sudo pacman -S tree",
+    "ubuntu": "sudo apt install tree",
+    "fedora": "sudo dnf install tree",
+    "risk": "low"
+  },
+  {
+    "task": "setup tree",
+    "arch": "sudo pacman -S tree",
+    "ubuntu": "sudo apt install tree",
+    "fedora": "sudo dnf install tree",
+    "risk": "low"
+  },
+  {
+    "task": "add tree",
+    "arch": "sudo pacman -S tree",
+    "ubuntu": "sudo apt install tree",
+    "fedora": "sudo dnf install tree",
+    "risk": "low"
+  },
+  {
+    "task": "install rsync",
+    "arch": "sudo pacman -S rsync",
+    "ubuntu": "sudo apt install rsync",
+    "fedora": "sudo dnf install rsync",
+    "risk": "low"
+  },
+  {
+    "task": "download rsync",
+    "arch": "sudo pacman -S rsync",
+    "ubuntu": "sudo apt install rsync",
+    "fedora": "sudo dnf install rsync",
+    "risk": "low"
+  },
+  {
+    "task": "setup rsync",
+    "arch": "sudo pacman -S rsync",
+    "ubuntu": "sudo apt install rsync",
+    "fedora": "sudo dnf install rsync",
+    "risk": "low"
+  },
+  {
+    "task": "add rsync",
+    "arch": "sudo pacman -S rsync",
+    "ubuntu": "sudo apt install rsync",
+    "fedora": "sudo dnf install rsync",
+    "risk": "low"
+  },
+  {
+    "task": "install net-tools",
+    "arch": "sudo pacman -S net-tools",
+    "ubuntu": "sudo apt install net-tools",
+    "fedora": "sudo dnf install net-tools",
+    "risk": "low"
+  },
+  {
+    "task": "download net-tools",
+    "arch": "sudo pacman -S net-tools",
+    "ubuntu": "sudo apt install net-tools",
+    "fedora": "sudo dnf install net-tools",
+    "risk": "low"
+  },
+  {
+    "task": "setup net-tools",
+    "arch": "sudo pacman -S net-tools",
+    "ubuntu": "sudo apt install net-tools",
+    "fedora": "sudo dnf install net-tools",
+    "risk": "low"
+  },
+  {
+    "task": "add net-tools",
+    "arch": "sudo pacman -S net-tools",
+    "ubuntu": "sudo apt install net-tools",
+    "fedora": "sudo dnf install net-tools",
+    "risk": "low"
+  },
+  {
+    "task": "install bind",
+    "arch": "sudo pacman -S bind",
+    "ubuntu": "sudo apt install bind",
+    "fedora": "sudo dnf install bind",
+    "risk": "low"
+  },
+  {
+    "task": "download bind",
+    "arch": "sudo pacman -S bind",
+    "ubuntu": "sudo apt install bind",
+    "fedora": "sudo dnf install bind",
+    "risk": "low"
+  },
+  {
+    "task": "setup bind",
+    "arch": "sudo pacman -S bind",
+    "ubuntu": "sudo apt install bind",
+    "fedora": "sudo dnf install bind",
+    "risk": "low"
+  },
+  {
+    "task": "add bind",
+    "arch": "sudo pacman -S bind",
+    "ubuntu": "sudo apt install bind",
+    "fedora": "sudo dnf install bind",
+    "risk": "low"
+  },
+  {
+    "task": "install tcpdump",
+    "arch": "sudo pacman -S tcpdump",
+    "ubuntu": "sudo apt install tcpdump",
+    "fedora": "sudo dnf install tcpdump",
+    "risk": "low"
+  },
+  {
+    "task": "download tcpdump",
+    "arch": "sudo pacman -S tcpdump",
+    "ubuntu": "sudo apt install tcpdump",
+    "fedora": "sudo dnf install tcpdump",
+    "risk": "low"
+  },
+  {
+    "task": "setup tcpdump",
+    "arch": "sudo pacman -S tcpdump",
+    "ubuntu": "sudo apt install tcpdump",
+    "fedora": "sudo dnf install tcpdump",
+    "risk": "low"
+  },
+  {
+    "task": "add tcpdump",
+    "arch": "sudo pacman -S tcpdump",
+    "ubuntu": "sudo apt install tcpdump",
+    "fedora": "sudo dnf install tcpdump",
+    "risk": "low"
+  },
+  {
+    "task": "install nmap",
+    "arch": "sudo pacman -S nmap",
+    "ubuntu": "sudo apt install nmap",
+    "fedora": "sudo dnf install nmap",
+    "risk": "low"
+  },
+  {
+    "task": "download nmap",
+    "arch": "sudo pacman -S nmap",
+    "ubuntu": "sudo apt install nmap",
+    "fedora": "sudo dnf install nmap",
+    "risk": "low"
+  },
+  {
+    "task": "setup nmap",
+    "arch": "sudo pacman -S nmap",
+    "ubuntu": "sudo apt install nmap",
+    "fedora": "sudo dnf install nmap",
+    "risk": "low"
+  },
+  {
+    "task": "add nmap",
+    "arch": "sudo pacman -S nmap",
+    "ubuntu": "sudo apt install nmap",
+    "fedora": "sudo dnf install nmap",
+    "risk": "low"
+  },
+  {
+    "task": "install whois",
+    "arch": "sudo pacman -S whois",
+    "ubuntu": "sudo apt install whois",
+    "fedora": "sudo dnf install whois",
+    "risk": "low"
+  },
+  {
+    "task": "download whois",
+    "arch": "sudo pacman -S whois",
+    "ubuntu": "sudo apt install whois",
+    "fedora": "sudo dnf install whois",
+    "risk": "low"
+  },
+  {
+    "task": "setup whois",
+    "arch": "sudo pacman -S whois",
+    "ubuntu": "sudo apt install whois",
+    "fedora": "sudo dnf install whois",
+    "risk": "low"
+  },
+  {
+    "task": "add whois",
+    "arch": "sudo pacman -S whois",
+    "ubuntu": "sudo apt install whois",
+    "fedora": "sudo dnf install whois",
+    "risk": "low"
+  },
+  {
+    "task": "install jq",
+    "arch": "sudo pacman -S jq",
+    "ubuntu": "sudo apt install jq",
+    "fedora": "sudo dnf install jq",
+    "risk": "low"
+  },
+  {
+    "task": "download jq",
+    "arch": "sudo pacman -S jq",
+    "ubuntu": "sudo apt install jq",
+    "fedora": "sudo dnf install jq",
+    "risk": "low"
+  },
+  {
+    "task": "setup jq",
+    "arch": "sudo pacman -S jq",
+    "ubuntu": "sudo apt install jq",
+    "fedora": "sudo dnf install jq",
+    "risk": "low"
+  },
+  {
+    "task": "add jq",
+    "arch": "sudo pacman -S jq",
+    "ubuntu": "sudo apt install jq",
+    "fedora": "sudo dnf install jq",
+    "risk": "low"
+  },
+  {
+    "task": "install zip",
+    "arch": "sudo pacman -S zip",
+    "ubuntu": "sudo apt install zip",
+    "fedora": "sudo dnf install zip",
+    "risk": "low"
+  },
+  {
+    "task": "download zip",
+    "arch": "sudo pacman -S zip",
+    "ubuntu": "sudo apt install zip",
+    "fedora": "sudo dnf install zip",
+    "risk": "low"
+  },
+  {
+    "task": "setup zip",
+    "arch": "sudo pacman -S zip",
+    "ubuntu": "sudo apt install zip",
+    "fedora": "sudo dnf install zip",
+    "risk": "low"
+  },
+  {
+    "task": "add zip",
+    "arch": "sudo pacman -S zip",
+    "ubuntu": "sudo apt install zip",
+    "fedora": "sudo dnf install zip",
+    "risk": "low"
+  },
+  {
+    "task": "install unzip",
+    "arch": "sudo pacman -S unzip",
+    "ubuntu": "sudo apt install unzip",
+    "fedora": "sudo dnf install unzip",
+    "risk": "low"
+  },
+  {
+    "task": "download unzip",
+    "arch": "sudo pacman -S unzip",
+    "ubuntu": "sudo apt install unzip",
+    "fedora": "sudo dnf install unzip",
+    "risk": "low"
+  },
+  {
+    "task": "setup unzip",
+    "arch": "sudo pacman -S unzip",
+    "ubuntu": "sudo apt install unzip",
+    "fedora": "sudo dnf install unzip",
+    "risk": "low"
+  },
+  {
+    "task": "add unzip",
+    "arch": "sudo pacman -S unzip",
+    "ubuntu": "sudo apt install unzip",
+    "fedora": "sudo dnf install unzip",
+    "risk": "low"
+  },
+  {
+    "task": "install tar",
+    "arch": "sudo pacman -S tar",
+    "ubuntu": "sudo apt install tar",
+    "fedora": "sudo dnf install tar",
+    "risk": "low"
+  },
+  {
+    "task": "download tar",
+    "arch": "sudo pacman -S tar",
+    "ubuntu": "sudo apt install tar",
+    "fedora": "sudo dnf install tar",
+    "risk": "low"
+  },
+  {
+    "task": "setup tar",
+    "arch": "sudo pacman -S tar",
+    "ubuntu": "sudo apt install tar",
+    "fedora": "sudo dnf install tar",
+    "risk": "low"
+  },
+  {
+    "task": "add tar",
+    "arch": "sudo pacman -S tar",
+    "ubuntu": "sudo apt install tar",
+    "fedora": "sudo dnf install tar",
+    "risk": "low"
+  },
+  {
+    "task": "install screen",
+    "arch": "sudo pacman -S screen",
+    "ubuntu": "sudo apt install screen",
+    "fedora": "sudo dnf install screen",
+    "risk": "low"
+  },
+  {
+    "task": "download screen",
+    "arch": "sudo pacman -S screen",
+    "ubuntu": "sudo apt install screen",
+    "fedora": "sudo dnf install screen",
+    "risk": "low"
+  },
+  {
+    "task": "setup screen",
+    "arch": "sudo pacman -S screen",
+    "ubuntu": "sudo apt install screen",
+    "fedora": "sudo dnf install screen",
+    "risk": "low"
+  },
+  {
+    "task": "add screen",
+    "arch": "sudo pacman -S screen",
+    "ubuntu": "sudo apt install screen",
+    "fedora": "sudo dnf install screen",
+    "risk": "low"
+  },
+  {
+    "task": "install fish",
+    "arch": "sudo pacman -S fish",
+    "ubuntu": "sudo apt install fish",
+    "fedora": "sudo dnf install fish",
+    "risk": "low"
+  },
+  {
+    "task": "download fish",
+    "arch": "sudo pacman -S fish",
+    "ubuntu": "sudo apt install fish",
+    "fedora": "sudo dnf install fish",
+    "risk": "low"
+  },
+  {
+    "task": "setup fish",
+    "arch": "sudo pacman -S fish",
+    "ubuntu": "sudo apt install fish",
+    "fedora": "sudo dnf install fish",
+    "risk": "low"
+  },
+  {
+    "task": "add fish",
+    "arch": "sudo pacman -S fish",
+    "ubuntu": "sudo apt install fish",
+    "fedora": "sudo dnf install fish",
+    "risk": "low"
+  },
+  {
+    "task": "install zsh",
+    "arch": "sudo pacman -S zsh",
+    "ubuntu": "sudo apt install zsh",
+    "fedora": "sudo dnf install zsh",
+    "risk": "low"
+  },
+  {
+    "task": "download zsh",
+    "arch": "sudo pacman -S zsh",
+    "ubuntu": "sudo apt install zsh",
+    "fedora": "sudo dnf install zsh",
+    "risk": "low"
+  },
+  {
+    "task": "setup zsh",
+    "arch": "sudo pacman -S zsh",
+    "ubuntu": "sudo apt install zsh",
+    "fedora": "sudo dnf install zsh",
+    "risk": "low"
+  },
+  {
+    "task": "add zsh",
+    "arch": "sudo pacman -S zsh",
+    "ubuntu": "sudo apt install zsh",
+    "fedora": "sudo dnf install zsh",
+    "risk": "low"
+  },
+  {
+    "task": "remove nginx",
+    "arch": "sudo pacman -R nginx",
+    "ubuntu": "sudo apt remove nginx",
+    "fedora": "sudo dnf remove nginx",
+    "risk": "medium"
+  },
+  {
+    "task": "delete nginx",
+    "arch": "sudo pacman -R nginx",
+    "ubuntu": "sudo apt remove nginx",
+    "fedora": "sudo dnf remove nginx",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall nginx",
+    "arch": "sudo pacman -R nginx",
+    "ubuntu": "sudo apt remove nginx",
+    "fedora": "sudo dnf remove nginx",
+    "risk": "medium"
+  },
+  {
+    "task": "remove docker",
+    "arch": "sudo pacman -R docker",
+    "ubuntu": "sudo apt remove docker",
+    "fedora": "sudo dnf remove docker",
+    "risk": "medium"
+  },
+  {
+    "task": "delete docker",
+    "arch": "sudo pacman -R docker",
+    "ubuntu": "sudo apt remove docker",
+    "fedora": "sudo dnf remove docker",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall docker",
+    "arch": "sudo pacman -R docker",
+    "ubuntu": "sudo apt remove docker",
+    "fedora": "sudo dnf remove docker",
+    "risk": "medium"
+  },
+  {
+    "task": "remove nodejs",
+    "arch": "sudo pacman -R nodejs",
+    "ubuntu": "sudo apt remove nodejs",
+    "fedora": "sudo dnf remove nodejs",
+    "risk": "medium"
+  },
+  {
+    "task": "delete nodejs",
+    "arch": "sudo pacman -R nodejs",
+    "ubuntu": "sudo apt remove nodejs",
+    "fedora": "sudo dnf remove nodejs",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall nodejs",
+    "arch": "sudo pacman -R nodejs",
+    "ubuntu": "sudo apt remove nodejs",
+    "fedora": "sudo dnf remove nodejs",
+    "risk": "medium"
+  },
+  {
+    "task": "remove python",
+    "arch": "sudo pacman -R python",
+    "ubuntu": "sudo apt remove python",
+    "fedora": "sudo dnf remove python",
+    "risk": "medium"
+  },
+  {
+    "task": "delete python",
+    "arch": "sudo pacman -R python",
+    "ubuntu": "sudo apt remove python",
+    "fedora": "sudo dnf remove python",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall python",
+    "arch": "sudo pacman -R python",
+    "ubuntu": "sudo apt remove python",
+    "fedora": "sudo dnf remove python",
+    "risk": "medium"
+  },
+  {
+    "task": "remove git",
+    "arch": "sudo pacman -R git",
+    "ubuntu": "sudo apt remove git",
+    "fedora": "sudo dnf remove git",
+    "risk": "medium"
+  },
+  {
+    "task": "delete git",
+    "arch": "sudo pacman -R git",
+    "ubuntu": "sudo apt remove git",
+    "fedora": "sudo dnf remove git",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall git",
+    "arch": "sudo pacman -R git",
+    "ubuntu": "sudo apt remove git",
+    "fedora": "sudo dnf remove git",
+    "risk": "medium"
+  },
+  {
+    "task": "remove neovim",
+    "arch": "sudo pacman -R neovim",
+    "ubuntu": "sudo apt remove neovim",
+    "fedora": "sudo dnf remove neovim",
+    "risk": "medium"
+  },
+  {
+    "task": "delete neovim",
+    "arch": "sudo pacman -R neovim",
+    "ubuntu": "sudo apt remove neovim",
+    "fedora": "sudo dnf remove neovim",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall neovim",
+    "arch": "sudo pacman -R neovim",
+    "ubuntu": "sudo apt remove neovim",
+    "fedora": "sudo dnf remove neovim",
+    "risk": "medium"
+  },
+  {
+    "task": "remove htop",
+    "arch": "sudo pacman -R htop",
+    "ubuntu": "sudo apt remove htop",
+    "fedora": "sudo dnf remove htop",
+    "risk": "medium"
+  },
+  {
+    "task": "delete htop",
+    "arch": "sudo pacman -R htop",
+    "ubuntu": "sudo apt remove htop",
+    "fedora": "sudo dnf remove htop",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall htop",
+    "arch": "sudo pacman -R htop",
+    "ubuntu": "sudo apt remove htop",
+    "fedora": "sudo dnf remove htop",
+    "risk": "medium"
+  },
+  {
+    "task": "remove tmux",
+    "arch": "sudo pacman -R tmux",
+    "ubuntu": "sudo apt remove tmux",
+    "fedora": "sudo dnf remove tmux",
+    "risk": "medium"
+  },
+  {
+    "task": "delete tmux",
+    "arch": "sudo pacman -R tmux",
+    "ubuntu": "sudo apt remove tmux",
+    "fedora": "sudo dnf remove tmux",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall tmux",
+    "arch": "sudo pacman -R tmux",
+    "ubuntu": "sudo apt remove tmux",
+    "fedora": "sudo dnf remove tmux",
+    "risk": "medium"
+  },
+  {
+    "task": "remove curl",
+    "arch": "sudo pacman -R curl",
+    "ubuntu": "sudo apt remove curl",
+    "fedora": "sudo dnf remove curl",
+    "risk": "medium"
+  },
+  {
+    "task": "delete curl",
+    "arch": "sudo pacman -R curl",
+    "ubuntu": "sudo apt remove curl",
+    "fedora": "sudo dnf remove curl",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall curl",
+    "arch": "sudo pacman -R curl",
+    "ubuntu": "sudo apt remove curl",
+    "fedora": "sudo dnf remove curl",
+    "risk": "medium"
+  },
+  {
+    "task": "remove wget",
+    "arch": "sudo pacman -R wget",
+    "ubuntu": "sudo apt remove wget",
+    "fedora": "sudo dnf remove wget",
+    "risk": "medium"
+  },
+  {
+    "task": "delete wget",
+    "arch": "sudo pacman -R wget",
+    "ubuntu": "sudo apt remove wget",
+    "fedora": "sudo dnf remove wget",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall wget",
+    "arch": "sudo pacman -R wget",
+    "ubuntu": "sudo apt remove wget",
+    "fedora": "sudo dnf remove wget",
+    "risk": "medium"
+  },
+  {
+    "task": "remove postgresql",
+    "arch": "sudo pacman -R postgresql",
+    "ubuntu": "sudo apt remove postgresql",
+    "fedora": "sudo dnf remove postgresql",
+    "risk": "medium"
+  },
+  {
+    "task": "delete postgresql",
+    "arch": "sudo pacman -R postgresql",
+    "ubuntu": "sudo apt remove postgresql",
+    "fedora": "sudo dnf remove postgresql",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall postgresql",
+    "arch": "sudo pacman -R postgresql",
+    "ubuntu": "sudo apt remove postgresql",
+    "fedora": "sudo dnf remove postgresql",
+    "risk": "medium"
+  },
+  {
+    "task": "remove redis",
+    "arch": "sudo pacman -R redis",
+    "ubuntu": "sudo apt remove redis",
+    "fedora": "sudo dnf remove redis",
+    "risk": "medium"
+  },
+  {
+    "task": "delete redis",
+    "arch": "sudo pacman -R redis",
+    "ubuntu": "sudo apt remove redis",
+    "fedora": "sudo dnf remove redis",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall redis",
+    "arch": "sudo pacman -R redis",
+    "ubuntu": "sudo apt remove redis",
+    "fedora": "sudo dnf remove redis",
+    "risk": "medium"
+  },
+  {
+    "task": "remove mysql",
+    "arch": "sudo pacman -R mysql",
+    "ubuntu": "sudo apt remove mysql",
+    "fedora": "sudo dnf remove mysql",
+    "risk": "medium"
+  },
+  {
+    "task": "delete mysql",
+    "arch": "sudo pacman -R mysql",
+    "ubuntu": "sudo apt remove mysql",
+    "fedora": "sudo dnf remove mysql",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall mysql",
+    "arch": "sudo pacman -R mysql",
+    "ubuntu": "sudo apt remove mysql",
+    "fedora": "sudo dnf remove mysql",
+    "risk": "medium"
+  },
+  {
+    "task": "remove firefox",
+    "arch": "sudo pacman -R firefox",
+    "ubuntu": "sudo apt remove firefox",
+    "fedora": "sudo dnf remove firefox",
+    "risk": "medium"
+  },
+  {
+    "task": "delete firefox",
+    "arch": "sudo pacman -R firefox",
+    "ubuntu": "sudo apt remove firefox",
+    "fedora": "sudo dnf remove firefox",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall firefox",
+    "arch": "sudo pacman -R firefox",
+    "ubuntu": "sudo apt remove firefox",
+    "fedora": "sudo dnf remove firefox",
+    "risk": "medium"
+  },
+  {
+    "task": "remove chromium",
+    "arch": "sudo pacman -R chromium",
+    "ubuntu": "sudo apt remove chromium",
+    "fedora": "sudo dnf remove chromium",
+    "risk": "medium"
+  },
+  {
+    "task": "delete chromium",
+    "arch": "sudo pacman -R chromium",
+    "ubuntu": "sudo apt remove chromium",
+    "fedora": "sudo dnf remove chromium",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall chromium",
+    "arch": "sudo pacman -R chromium",
+    "ubuntu": "sudo apt remove chromium",
+    "fedora": "sudo dnf remove chromium",
+    "risk": "medium"
+  },
+  {
+    "task": "remove vim",
+    "arch": "sudo pacman -R vim",
+    "ubuntu": "sudo apt remove vim",
+    "fedora": "sudo dnf remove vim",
+    "risk": "medium"
+  },
+  {
+    "task": "delete vim",
+    "arch": "sudo pacman -R vim",
+    "ubuntu": "sudo apt remove vim",
+    "fedora": "sudo dnf remove vim",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall vim",
+    "arch": "sudo pacman -R vim",
+    "ubuntu": "sudo apt remove vim",
+    "fedora": "sudo dnf remove vim",
+    "risk": "medium"
+  },
+  {
+    "task": "remove nano",
+    "arch": "sudo pacman -R nano",
+    "ubuntu": "sudo apt remove nano",
+    "fedora": "sudo dnf remove nano",
+    "risk": "medium"
+  },
+  {
+    "task": "delete nano",
+    "arch": "sudo pacman -R nano",
+    "ubuntu": "sudo apt remove nano",
+    "fedora": "sudo dnf remove nano",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall nano",
+    "arch": "sudo pacman -R nano",
+    "ubuntu": "sudo apt remove nano",
+    "fedora": "sudo dnf remove nano",
+    "risk": "medium"
+  },
+  {
+    "task": "remove openssh",
+    "arch": "sudo pacman -R openssh",
+    "ubuntu": "sudo apt remove openssh",
+    "fedora": "sudo dnf remove openssh",
+    "risk": "medium"
+  },
+  {
+    "task": "delete openssh",
+    "arch": "sudo pacman -R openssh",
+    "ubuntu": "sudo apt remove openssh",
+    "fedora": "sudo dnf remove openssh",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall openssh",
+    "arch": "sudo pacman -R openssh",
+    "ubuntu": "sudo apt remove openssh",
+    "fedora": "sudo dnf remove openssh",
+    "risk": "medium"
+  },
+  {
+    "task": "remove gcc",
+    "arch": "sudo pacman -R gcc",
+    "ubuntu": "sudo apt remove gcc",
+    "fedora": "sudo dnf remove gcc",
+    "risk": "medium"
+  },
+  {
+    "task": "delete gcc",
+    "arch": "sudo pacman -R gcc",
+    "ubuntu": "sudo apt remove gcc",
+    "fedora": "sudo dnf remove gcc",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall gcc",
+    "arch": "sudo pacman -R gcc",
+    "ubuntu": "sudo apt remove gcc",
+    "fedora": "sudo dnf remove gcc",
+    "risk": "medium"
+  },
+  {
+    "task": "remove make",
+    "arch": "sudo pacman -R make",
+    "ubuntu": "sudo apt remove make",
+    "fedora": "sudo dnf remove make",
+    "risk": "medium"
+  },
+  {
+    "task": "delete make",
+    "arch": "sudo pacman -R make",
+    "ubuntu": "sudo apt remove make",
+    "fedora": "sudo dnf remove make",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall make",
+    "arch": "sudo pacman -R make",
+    "ubuntu": "sudo apt remove make",
+    "fedora": "sudo dnf remove make",
+    "risk": "medium"
+  },
+  {
+    "task": "remove cmake",
+    "arch": "sudo pacman -R cmake",
+    "ubuntu": "sudo apt remove cmake",
+    "fedora": "sudo dnf remove cmake",
+    "risk": "medium"
+  },
+  {
+    "task": "delete cmake",
+    "arch": "sudo pacman -R cmake",
+    "ubuntu": "sudo apt remove cmake",
+    "fedora": "sudo dnf remove cmake",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall cmake",
+    "arch": "sudo pacman -R cmake",
+    "ubuntu": "sudo apt remove cmake",
+    "fedora": "sudo dnf remove cmake",
+    "risk": "medium"
+  },
+  {
+    "task": "remove npm",
+    "arch": "sudo pacman -R npm",
+    "ubuntu": "sudo apt remove npm",
+    "fedora": "sudo dnf remove npm",
+    "risk": "medium"
+  },
+  {
+    "task": "delete npm",
+    "arch": "sudo pacman -R npm",
+    "ubuntu": "sudo apt remove npm",
+    "fedora": "sudo dnf remove npm",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall npm",
+    "arch": "sudo pacman -R npm",
+    "ubuntu": "sudo apt remove npm",
+    "fedora": "sudo dnf remove npm",
+    "risk": "medium"
+  },
+  {
+    "task": "remove yarn",
+    "arch": "sudo pacman -R yarn",
+    "ubuntu": "sudo apt remove yarn",
+    "fedora": "sudo dnf remove yarn",
+    "risk": "medium"
+  },
+  {
+    "task": "delete yarn",
+    "arch": "sudo pacman -R yarn",
+    "ubuntu": "sudo apt remove yarn",
+    "fedora": "sudo dnf remove yarn",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall yarn",
+    "arch": "sudo pacman -R yarn",
+    "ubuntu": "sudo apt remove yarn",
+    "fedora": "sudo dnf remove yarn",
+    "risk": "medium"
+  },
+  {
+    "task": "remove go",
+    "arch": "sudo pacman -R go",
+    "ubuntu": "sudo apt remove go",
+    "fedora": "sudo dnf remove go",
+    "risk": "medium"
+  },
+  {
+    "task": "delete go",
+    "arch": "sudo pacman -R go",
+    "ubuntu": "sudo apt remove go",
+    "fedora": "sudo dnf remove go",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall go",
+    "arch": "sudo pacman -R go",
+    "ubuntu": "sudo apt remove go",
+    "fedora": "sudo dnf remove go",
+    "risk": "medium"
+  },
+  {
+    "task": "remove rust",
+    "arch": "sudo pacman -R rust",
+    "ubuntu": "sudo apt remove rust",
+    "fedora": "sudo dnf remove rust",
+    "risk": "medium"
+  },
+  {
+    "task": "delete rust",
+    "arch": "sudo pacman -R rust",
+    "ubuntu": "sudo apt remove rust",
+    "fedora": "sudo dnf remove rust",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall rust",
+    "arch": "sudo pacman -R rust",
+    "ubuntu": "sudo apt remove rust",
+    "fedora": "sudo dnf remove rust",
+    "risk": "medium"
+  },
+  {
+    "task": "remove php",
+    "arch": "sudo pacman -R php",
+    "ubuntu": "sudo apt remove php",
+    "fedora": "sudo dnf remove php",
+    "risk": "medium"
+  },
+  {
+    "task": "delete php",
+    "arch": "sudo pacman -R php",
+    "ubuntu": "sudo apt remove php",
+    "fedora": "sudo dnf remove php",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall php",
+    "arch": "sudo pacman -R php",
+    "ubuntu": "sudo apt remove php",
+    "fedora": "sudo dnf remove php",
+    "risk": "medium"
+  },
+  {
+    "task": "remove ruby",
+    "arch": "sudo pacman -R ruby",
+    "ubuntu": "sudo apt remove ruby",
+    "fedora": "sudo dnf remove ruby",
+    "risk": "medium"
+  },
+  {
+    "task": "delete ruby",
+    "arch": "sudo pacman -R ruby",
+    "ubuntu": "sudo apt remove ruby",
+    "fedora": "sudo dnf remove ruby",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall ruby",
+    "arch": "sudo pacman -R ruby",
+    "ubuntu": "sudo apt remove ruby",
+    "fedora": "sudo dnf remove ruby",
+    "risk": "medium"
+  },
+  {
+    "task": "remove perl",
+    "arch": "sudo pacman -R perl",
+    "ubuntu": "sudo apt remove perl",
+    "fedora": "sudo dnf remove perl",
+    "risk": "medium"
+  },
+  {
+    "task": "delete perl",
+    "arch": "sudo pacman -R perl",
+    "ubuntu": "sudo apt remove perl",
+    "fedora": "sudo dnf remove perl",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall perl",
+    "arch": "sudo pacman -R perl",
+    "ubuntu": "sudo apt remove perl",
+    "fedora": "sudo dnf remove perl",
+    "risk": "medium"
+  },
+  {
+    "task": "remove clang",
+    "arch": "sudo pacman -R clang",
+    "ubuntu": "sudo apt remove clang",
+    "fedora": "sudo dnf remove clang",
+    "risk": "medium"
+  },
+  {
+    "task": "delete clang",
+    "arch": "sudo pacman -R clang",
+    "ubuntu": "sudo apt remove clang",
+    "fedora": "sudo dnf remove clang",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall clang",
+    "arch": "sudo pacman -R clang",
+    "ubuntu": "sudo apt remove clang",
+    "fedora": "sudo dnf remove clang",
+    "risk": "medium"
+  },
+  {
+    "task": "remove gdb",
+    "arch": "sudo pacman -R gdb",
+    "ubuntu": "sudo apt remove gdb",
+    "fedora": "sudo dnf remove gdb",
+    "risk": "medium"
+  },
+  {
+    "task": "delete gdb",
+    "arch": "sudo pacman -R gdb",
+    "ubuntu": "sudo apt remove gdb",
+    "fedora": "sudo dnf remove gdb",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall gdb",
+    "arch": "sudo pacman -R gdb",
+    "ubuntu": "sudo apt remove gdb",
+    "fedora": "sudo dnf remove gdb",
+    "risk": "medium"
+  },
+  {
+    "task": "remove tree",
+    "arch": "sudo pacman -R tree",
+    "ubuntu": "sudo apt remove tree",
+    "fedora": "sudo dnf remove tree",
+    "risk": "medium"
+  },
+  {
+    "task": "delete tree",
+    "arch": "sudo pacman -R tree",
+    "ubuntu": "sudo apt remove tree",
+    "fedora": "sudo dnf remove tree",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall tree",
+    "arch": "sudo pacman -R tree",
+    "ubuntu": "sudo apt remove tree",
+    "fedora": "sudo dnf remove tree",
+    "risk": "medium"
+  },
+  {
+    "task": "remove rsync",
+    "arch": "sudo pacman -R rsync",
+    "ubuntu": "sudo apt remove rsync",
+    "fedora": "sudo dnf remove rsync",
+    "risk": "medium"
+  },
+  {
+    "task": "delete rsync",
+    "arch": "sudo pacman -R rsync",
+    "ubuntu": "sudo apt remove rsync",
+    "fedora": "sudo dnf remove rsync",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall rsync",
+    "arch": "sudo pacman -R rsync",
+    "ubuntu": "sudo apt remove rsync",
+    "fedora": "sudo dnf remove rsync",
+    "risk": "medium"
+  },
+  {
+    "task": "remove net-tools",
+    "arch": "sudo pacman -R net-tools",
+    "ubuntu": "sudo apt remove net-tools",
+    "fedora": "sudo dnf remove net-tools",
+    "risk": "medium"
+  },
+  {
+    "task": "delete net-tools",
+    "arch": "sudo pacman -R net-tools",
+    "ubuntu": "sudo apt remove net-tools",
+    "fedora": "sudo dnf remove net-tools",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall net-tools",
+    "arch": "sudo pacman -R net-tools",
+    "ubuntu": "sudo apt remove net-tools",
+    "fedora": "sudo dnf remove net-tools",
+    "risk": "medium"
+  },
+  {
+    "task": "remove bind",
+    "arch": "sudo pacman -R bind",
+    "ubuntu": "sudo apt remove bind",
+    "fedora": "sudo dnf remove bind",
+    "risk": "medium"
+  },
+  {
+    "task": "delete bind",
+    "arch": "sudo pacman -R bind",
+    "ubuntu": "sudo apt remove bind",
+    "fedora": "sudo dnf remove bind",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall bind",
+    "arch": "sudo pacman -R bind",
+    "ubuntu": "sudo apt remove bind",
+    "fedora": "sudo dnf remove bind",
+    "risk": "medium"
+  },
+  {
+    "task": "remove tcpdump",
+    "arch": "sudo pacman -R tcpdump",
+    "ubuntu": "sudo apt remove tcpdump",
+    "fedora": "sudo dnf remove tcpdump",
+    "risk": "medium"
+  },
+  {
+    "task": "delete tcpdump",
+    "arch": "sudo pacman -R tcpdump",
+    "ubuntu": "sudo apt remove tcpdump",
+    "fedora": "sudo dnf remove tcpdump",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall tcpdump",
+    "arch": "sudo pacman -R tcpdump",
+    "ubuntu": "sudo apt remove tcpdump",
+    "fedora": "sudo dnf remove tcpdump",
+    "risk": "medium"
+  },
+  {
+    "task": "remove nmap",
+    "arch": "sudo pacman -R nmap",
+    "ubuntu": "sudo apt remove nmap",
+    "fedora": "sudo dnf remove nmap",
+    "risk": "medium"
+  },
+  {
+    "task": "delete nmap",
+    "arch": "sudo pacman -R nmap",
+    "ubuntu": "sudo apt remove nmap",
+    "fedora": "sudo dnf remove nmap",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall nmap",
+    "arch": "sudo pacman -R nmap",
+    "ubuntu": "sudo apt remove nmap",
+    "fedora": "sudo dnf remove nmap",
+    "risk": "medium"
+  },
+  {
+    "task": "remove whois",
+    "arch": "sudo pacman -R whois",
+    "ubuntu": "sudo apt remove whois",
+    "fedora": "sudo dnf remove whois",
+    "risk": "medium"
+  },
+  {
+    "task": "delete whois",
+    "arch": "sudo pacman -R whois",
+    "ubuntu": "sudo apt remove whois",
+    "fedora": "sudo dnf remove whois",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall whois",
+    "arch": "sudo pacman -R whois",
+    "ubuntu": "sudo apt remove whois",
+    "fedora": "sudo dnf remove whois",
+    "risk": "medium"
+  },
+  {
+    "task": "remove jq",
+    "arch": "sudo pacman -R jq",
+    "ubuntu": "sudo apt remove jq",
+    "fedora": "sudo dnf remove jq",
+    "risk": "medium"
+  },
+  {
+    "task": "delete jq",
+    "arch": "sudo pacman -R jq",
+    "ubuntu": "sudo apt remove jq",
+    "fedora": "sudo dnf remove jq",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall jq",
+    "arch": "sudo pacman -R jq",
+    "ubuntu": "sudo apt remove jq",
+    "fedora": "sudo dnf remove jq",
+    "risk": "medium"
+  },
+  {
+    "task": "remove zip",
+    "arch": "sudo pacman -R zip",
+    "ubuntu": "sudo apt remove zip",
+    "fedora": "sudo dnf remove zip",
+    "risk": "medium"
+  },
+  {
+    "task": "delete zip",
+    "arch": "sudo pacman -R zip",
+    "ubuntu": "sudo apt remove zip",
+    "fedora": "sudo dnf remove zip",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall zip",
+    "arch": "sudo pacman -R zip",
+    "ubuntu": "sudo apt remove zip",
+    "fedora": "sudo dnf remove zip",
+    "risk": "medium"
+  },
+  {
+    "task": "remove unzip",
+    "arch": "sudo pacman -R unzip",
+    "ubuntu": "sudo apt remove unzip",
+    "fedora": "sudo dnf remove unzip",
+    "risk": "medium"
+  },
+  {
+    "task": "delete unzip",
+    "arch": "sudo pacman -R unzip",
+    "ubuntu": "sudo apt remove unzip",
+    "fedora": "sudo dnf remove unzip",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall unzip",
+    "arch": "sudo pacman -R unzip",
+    "ubuntu": "sudo apt remove unzip",
+    "fedora": "sudo dnf remove unzip",
+    "risk": "medium"
+  },
+  {
+    "task": "remove tar",
+    "arch": "sudo pacman -R tar",
+    "ubuntu": "sudo apt remove tar",
+    "fedora": "sudo dnf remove tar",
+    "risk": "medium"
+  },
+  {
+    "task": "delete tar",
+    "arch": "sudo pacman -R tar",
+    "ubuntu": "sudo apt remove tar",
+    "fedora": "sudo dnf remove tar",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall tar",
+    "arch": "sudo pacman -R tar",
+    "ubuntu": "sudo apt remove tar",
+    "fedora": "sudo dnf remove tar",
+    "risk": "medium"
+  },
+  {
+    "task": "remove screen",
+    "arch": "sudo pacman -R screen",
+    "ubuntu": "sudo apt remove screen",
+    "fedora": "sudo dnf remove screen",
+    "risk": "medium"
+  },
+  {
+    "task": "delete screen",
+    "arch": "sudo pacman -R screen",
+    "ubuntu": "sudo apt remove screen",
+    "fedora": "sudo dnf remove screen",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall screen",
+    "arch": "sudo pacman -R screen",
+    "ubuntu": "sudo apt remove screen",
+    "fedora": "sudo dnf remove screen",
+    "risk": "medium"
+  },
+  {
+    "task": "remove fish",
+    "arch": "sudo pacman -R fish",
+    "ubuntu": "sudo apt remove fish",
+    "fedora": "sudo dnf remove fish",
+    "risk": "medium"
+  },
+  {
+    "task": "delete fish",
+    "arch": "sudo pacman -R fish",
+    "ubuntu": "sudo apt remove fish",
+    "fedora": "sudo dnf remove fish",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall fish",
+    "arch": "sudo pacman -R fish",
+    "ubuntu": "sudo apt remove fish",
+    "fedora": "sudo dnf remove fish",
+    "risk": "medium"
+  },
+  {
+    "task": "remove zsh",
+    "arch": "sudo pacman -R zsh",
+    "ubuntu": "sudo apt remove zsh",
+    "fedora": "sudo dnf remove zsh",
+    "risk": "medium"
+  },
+  {
+    "task": "delete zsh",
+    "arch": "sudo pacman -R zsh",
+    "ubuntu": "sudo apt remove zsh",
+    "fedora": "sudo dnf remove zsh",
+    "risk": "medium"
+  },
+  {
+    "task": "uninstall zsh",
+    "arch": "sudo pacman -R zsh",
+    "ubuntu": "sudo apt remove zsh",
+    "fedora": "sudo dnf remove zsh",
+    "risk": "medium"
+  },
+  {
+    "task": "start nginx",
+    "arch": "sudo systemctl start nginx",
+    "ubuntu": "sudo systemctl start nginx",
+    "fedora": "sudo systemctl start nginx",
+    "risk": "low"
+  },
+  {
+    "task": "launch nginx",
+    "arch": "sudo systemctl start nginx",
+    "ubuntu": "sudo systemctl start nginx",
+    "fedora": "sudo systemctl start nginx",
+    "risk": "low"
+  },
+  {
+    "task": "stop nginx",
+    "arch": "sudo systemctl stop nginx",
+    "ubuntu": "sudo systemctl stop nginx",
+    "fedora": "sudo systemctl stop nginx",
+    "risk": "medium"
+  },
+  {
+    "task": "disable nginx",
+    "arch": "sudo systemctl stop nginx",
+    "ubuntu": "sudo systemctl stop nginx",
+    "fedora": "sudo systemctl stop nginx",
+    "risk": "medium"
+  },
+  {
+    "task": "restart nginx",
+    "arch": "sudo systemctl restart nginx",
+    "ubuntu": "sudo systemctl restart nginx",
+    "fedora": "sudo systemctl restart nginx",
+    "risk": "low"
+  },
+  {
+    "task": "reload nginx",
+    "arch": "sudo systemctl restart nginx",
+    "ubuntu": "sudo systemctl restart nginx",
+    "fedora": "sudo systemctl restart nginx",
+    "risk": "low"
+  },
+  {
+    "task": "start docker",
+    "arch": "sudo systemctl start docker",
+    "ubuntu": "sudo systemctl start docker",
+    "fedora": "sudo systemctl start docker",
+    "risk": "low"
+  },
+  {
+    "task": "launch docker",
+    "arch": "sudo systemctl start docker",
+    "ubuntu": "sudo systemctl start docker",
+    "fedora": "sudo systemctl start docker",
+    "risk": "low"
+  },
+  {
+    "task": "stop docker",
+    "arch": "sudo systemctl stop docker",
+    "ubuntu": "sudo systemctl stop docker",
+    "fedora": "sudo systemctl stop docker",
+    "risk": "medium"
+  },
+  {
+    "task": "disable docker",
+    "arch": "sudo systemctl stop docker",
+    "ubuntu": "sudo systemctl stop docker",
+    "fedora": "sudo systemctl stop docker",
+    "risk": "medium"
+  },
+  {
+    "task": "restart docker",
+    "arch": "sudo systemctl restart docker",
+    "ubuntu": "sudo systemctl restart docker",
+    "fedora": "sudo systemctl restart docker",
+    "risk": "low"
+  },
+  {
+    "task": "reload docker",
+    "arch": "sudo systemctl restart docker",
+    "ubuntu": "sudo systemctl restart docker",
+    "fedora": "sudo systemctl restart docker",
+    "risk": "low"
+  },
+  {
+    "task": "start ssh",
+    "arch": "sudo systemctl start ssh",
+    "ubuntu": "sudo systemctl start ssh",
+    "fedora": "sudo systemctl start ssh",
+    "risk": "low"
+  },
+  {
+    "task": "launch ssh",
+    "arch": "sudo systemctl start ssh",
+    "ubuntu": "sudo systemctl start ssh",
+    "fedora": "sudo systemctl start ssh",
+    "risk": "low"
+  },
+  {
+    "task": "stop ssh",
+    "arch": "sudo systemctl stop ssh",
+    "ubuntu": "sudo systemctl stop ssh",
+    "fedora": "sudo systemctl stop ssh",
+    "risk": "medium"
+  },
+  {
+    "task": "disable ssh",
+    "arch": "sudo systemctl stop ssh",
+    "ubuntu": "sudo systemctl stop ssh",
+    "fedora": "sudo systemctl stop ssh",
+    "risk": "medium"
+  },
+  {
+    "task": "restart ssh",
+    "arch": "sudo systemctl restart ssh",
+    "ubuntu": "sudo systemctl restart ssh",
+    "fedora": "sudo systemctl restart ssh",
+    "risk": "low"
+  },
+  {
+    "task": "reload ssh",
+    "arch": "sudo systemctl restart ssh",
+    "ubuntu": "sudo systemctl restart ssh",
+    "fedora": "sudo systemctl restart ssh",
+    "risk": "low"
+  },
+  {
+    "task": "start postgresql",
+    "arch": "sudo systemctl start postgresql",
+    "ubuntu": "sudo systemctl start postgresql",
+    "fedora": "sudo systemctl start postgresql",
+    "risk": "low"
+  },
+  {
+    "task": "launch postgresql",
+    "arch": "sudo systemctl start postgresql",
+    "ubuntu": "sudo systemctl start postgresql",
+    "fedora": "sudo systemctl start postgresql",
+    "risk": "low"
+  },
+  {
+    "task": "stop postgresql",
+    "arch": "sudo systemctl stop postgresql",
+    "ubuntu": "sudo systemctl stop postgresql",
+    "fedora": "sudo systemctl stop postgresql",
+    "risk": "medium"
+  },
+  {
+    "task": "disable postgresql",
+    "arch": "sudo systemctl stop postgresql",
+    "ubuntu": "sudo systemctl stop postgresql",
+    "fedora": "sudo systemctl stop postgresql",
+    "risk": "medium"
+  },
+  {
+    "task": "restart postgresql",
+    "arch": "sudo systemctl restart postgresql",
+    "ubuntu": "sudo systemctl restart postgresql",
+    "fedora": "sudo systemctl restart postgresql",
+    "risk": "low"
+  },
+  {
+    "task": "reload postgresql",
+    "arch": "sudo systemctl restart postgresql",
+    "ubuntu": "sudo systemctl restart postgresql",
+    "fedora": "sudo systemctl restart postgresql",
+    "risk": "low"
+  },
+  {
+    "task": "start redis",
+    "arch": "sudo systemctl start redis",
+    "ubuntu": "sudo systemctl start redis",
+    "fedora": "sudo systemctl start redis",
+    "risk": "low"
+  },
+  {
+    "task": "launch redis",
+    "arch": "sudo systemctl start redis",
+    "ubuntu": "sudo systemctl start redis",
+    "fedora": "sudo systemctl start redis",
+    "risk": "low"
+  },
+  {
+    "task": "stop redis",
+    "arch": "sudo systemctl stop redis",
+    "ubuntu": "sudo systemctl stop redis",
+    "fedora": "sudo systemctl stop redis",
+    "risk": "medium"
+  },
+  {
+    "task": "disable redis",
+    "arch": "sudo systemctl stop redis",
+    "ubuntu": "sudo systemctl stop redis",
+    "fedora": "sudo systemctl stop redis",
+    "risk": "medium"
+  },
+  {
+    "task": "restart redis",
+    "arch": "sudo systemctl restart redis",
+    "ubuntu": "sudo systemctl restart redis",
+    "fedora": "sudo systemctl restart redis",
+    "risk": "low"
+  },
+  {
+    "task": "reload redis",
+    "arch": "sudo systemctl restart redis",
+    "ubuntu": "sudo systemctl restart redis",
+    "fedora": "sudo systemctl restart redis",
+    "risk": "low"
+  },
+  {
+    "task": "start mysql",
+    "arch": "sudo systemctl start mysql",
+    "ubuntu": "sudo systemctl start mysql",
+    "fedora": "sudo systemctl start mysql",
+    "risk": "low"
+  },
+  {
+    "task": "launch mysql",
+    "arch": "sudo systemctl start mysql",
+    "ubuntu": "sudo systemctl start mysql",
+    "fedora": "sudo systemctl start mysql",
+    "risk": "low"
+  },
+  {
+    "task": "stop mysql",
+    "arch": "sudo systemctl stop mysql",
+    "ubuntu": "sudo systemctl stop mysql",
+    "fedora": "sudo systemctl stop mysql",
+    "risk": "medium"
+  },
+  {
+    "task": "disable mysql",
+    "arch": "sudo systemctl stop mysql",
+    "ubuntu": "sudo systemctl stop mysql",
+    "fedora": "sudo systemctl stop mysql",
+    "risk": "medium"
+  },
+  {
+    "task": "restart mysql",
+    "arch": "sudo systemctl restart mysql",
+    "ubuntu": "sudo systemctl restart mysql",
+    "fedora": "sudo systemctl restart mysql",
+    "risk": "low"
+  },
+  {
+    "task": "reload mysql",
+    "arch": "sudo systemctl restart mysql",
+    "ubuntu": "sudo systemctl restart mysql",
+    "fedora": "sudo systemctl restart mysql",
+    "risk": "low"
+  },
+  {
+    "task": "update system",
+    "arch": "sudo pacman -Syu",
+    "ubuntu": "sudo apt update && sudo apt upgrade",
+    "fedora": "sudo dnf upgrade",
+    "risk": "low"
+  },
+  {
+    "task": "upgrade system",
+    "arch": "sudo pacman -Syu",
+    "ubuntu": "sudo apt upgrade",
+    "fedora": "sudo dnf upgrade",
+    "risk": "low"
+  },
+  {
+    "task": "check disk usage",
+    "arch": "df -h",
+    "ubuntu": "df -h",
+    "fedora": "df -h",
+    "risk": "low"
+  },
+  {
+    "task": "check memory usage",
+    "arch": "free -h",
+    "ubuntu": "free -h",
+    "fedora": "free -h",
+    "risk": "low"
+  },
+  {
+    "task": "list running processes",
+    "arch": "ps aux",
+    "ubuntu": "ps aux",
+    "fedora": "ps aux",
+    "risk": "low"
+  },
+  {
+    "task": "show ip address",
+    "arch": "ip a",
+    "ubuntu": "ip a",
+    "fedora": "ip a",
+    "risk": "low"
+  },
+  {
+    "task": "check open ports",
+    "arch": "ss -tuln",
+    "ubuntu": "ss -tuln",
+    "fedora": "ss -tuln",
+    "risk": "low"
+  },
+  {
+    "task": "check system uptime",
+    "arch": "uptime",
+    "ubuntu": "uptime",
+    "fedora": "uptime",
+    "risk": "low"
+  }
+]

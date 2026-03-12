@@ -3,13 +3,12 @@ import { Terminal } from "@xterm/xterm";
 import { FitAddon } from "@xterm/addon-fit";
 import "@xterm/xterm/css/xterm.css";
 
-export default function TerminalPanel({ output, isRunning, onInput }) {
+export default function TerminalPanel({ output, onInput }) {
   const containerRef = useRef(null);
   const termRef = useRef(null);
   const fitAddonRef = useRef(null);
   const lastLengthRef = useRef(0);
 
-  // 🔹 Initialize xterm once
   const initTerminal = useCallback(() => {
     if (!containerRef.current || termRef.current) return;
 
@@ -31,6 +30,7 @@ export default function TerminalPanel({ output, isRunning, onInput }) {
     });
 
     const fitAddon = new FitAddon();
+
     term.loadAddon(fitAddon);
     term.open(containerRef.current);
 
@@ -40,17 +40,15 @@ export default function TerminalPanel({ output, isRunning, onInput }) {
       } catch {}
     });
 
-    // Forward user input to backend
+    // Forward all user input
     term.onData((data) => {
-      if (isRunning) {
-        onInput?.(data);
-      }
+      onInput?.(data);
     });
 
     termRef.current = term;
     fitAddonRef.current = fitAddon;
     lastLengthRef.current = 0;
-  }, [onInput, isRunning]);
+  }, [onInput]);
 
   useEffect(() => {
     initTerminal();
@@ -63,7 +61,7 @@ export default function TerminalPanel({ output, isRunning, onInput }) {
     };
   }, [initTerminal]);
 
-  // 🔹 Stream only new output
+  // Stream new output only
   useEffect(() => {
     if (!termRef.current) return;
 
@@ -75,15 +73,7 @@ export default function TerminalPanel({ output, isRunning, onInput }) {
     }
   }, [output]);
 
-  // 🔹 Reset terminal when new command starts
-  useEffect(() => {
-    if (!output && termRef.current) {
-      termRef.current.clear();
-      lastLengthRef.current = 0;
-    }
-  }, [output]);
-
-  // 🔹 Resize handling
+  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
       try {
@@ -96,21 +86,11 @@ export default function TerminalPanel({ output, isRunning, onInput }) {
   }, []);
 
   return (
-    <div className="relative mt-2 rounded-lg overflow-hidden border border-[#2a2a3e] animate-in fade-in slide-in-from-top-2 duration-300">
-      {isRunning && (
-        <div className="absolute top-2 right-2 z-10 flex items-center gap-2 px-2 py-1 rounded bg-[#1a1a2e]/90 text-xs">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ffaa00] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#ffaa00]" />
-          </span>
-          <span className="text-[#ffaa00] font-mono">Running...</span>
-        </div>
-      )}
-
+    <div className="h-full w-full border-l border-[#2a2a3e] bg-[#0a0a0f]">
       <div
         ref={containerRef}
-        className="w-full"
-        style={{ height: "220px", padding: "8px" }}
+        className="w-full h-full"
+        style={{ padding: "0px" }}
       />
     </div>
   );

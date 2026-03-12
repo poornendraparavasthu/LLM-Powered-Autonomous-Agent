@@ -1,106 +1,176 @@
-import { useState, useCallback, useEffect } from "react";
-import { Play, ChevronDown, ChevronUp, Square } from "lucide-react";
-import TerminalPanel from "./TerminalPanel";
+import { useState } from "react";
+import { Play, HelpCircle } from "lucide-react";
 
-export default function CommandBlock({
-  command,
-  isActiveTerminal,
-  terminalOutput,
-  isRunning,
-  onRun,
-  onTerminalInput,
-}) {
-  const [showOutput, setShowOutput] = useState(false);
-  const [hasCompleted, setHasCompleted] = useState(false);
-  const [savedOutput, setSavedOutput] = useState("");
+export default function CommandBlock({ command, onRun, onExplain }) {
 
-  const handleRun = useCallback(() => {
-    setHasCompleted(false);
-    setSavedOutput("");
-    setShowOutput(false);
-    onRun(command);
-  }, [command, onRun]);
+  const [explanation, setExplanation] = useState("");
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [running, setRunning] = useState(false);
 
-  const shouldShowTerminal =
-    isActiveTerminal && (isRunning || terminalOutput);
+  /*
+  ---------------------------------------
+  RUN COMMAND
+  ---------------------------------------
+  */
 
-  // ✅ Properly detect completion
-  useEffect(() => {
-    if (!isRunning && isActiveTerminal && terminalOutput && !hasCompleted) {
-      const timer = setTimeout(() => {
-        setSavedOutput(terminalOutput);
-        setHasCompleted(true);
-        setShowOutput(true);
-      }, 1000);
+  const handleRun = () => {
 
-      return () => clearTimeout(timer);
+    if (!command || running) return;
+
+    setRunning(true);
+
+    try {
+      onRun(command);
+    } finally {
+      setTimeout(() => setRunning(false), 300);
     }
-  }, [isRunning, isActiveTerminal, terminalOutput, hasCompleted]);
+
+  };
+
+  /*
+  ---------------------------------------
+  EXPLAIN COMMAND
+  ---------------------------------------
+  */
+
+  const handleExplain = async () => {
+
+    if (loading) return;
+
+    /* explanation already cached */
+
+    if (explanation) {
+      setShowExplanation(prev => !prev);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+
+      const result = await onExplain(command);
+
+      setExplanation(result);
+      setShowExplanation(true);
+
+    } catch {
+
+      setExplanation("Failed to generate explanation.");
+      setShowExplanation(true);
+
+    }
+
+    setLoading(false);
+  };
 
   return (
-    <div className="group">
-      <div className="flex items-center gap-3 p-3 rounded-lg bg-[#0a0a0f] border border-[#2a2a3e] hover:border-[#00ff88]/30 transition-all duration-200">
-        <code className="flex-1 text-sm font-mono text-[#e0e0e0] break-all select-all">
+
+    <div className="group space-y-2">
+
+      {/* Command Row */}
+
+      <div className="
+        flex items-center gap-3
+        p-3 rounded-lg
+        bg-[#0a0a0f]
+        border border-[#2a2a3e]
+        hover:border-[#00ff88]/30
+        transition-all duration-200
+      ">
+
+        {/* Command */}
+
+        <code className="
+          flex-1
+          text-sm
+          font-mono
+          text-[#e0e0e0]
+          break-all
+          select-all
+        ">
           <span className="text-[#00ff88]/60 mr-2">$</span>
           {command}
         </code>
 
+        {/* Explain Button */}
+
+        <button
+          onClick={handleExplain}
+          disabled={loading}
+          className="
+            flex items-center gap-1.5
+            px-3 py-1.5
+            rounded-md
+            text-xs font-semibold
+            transition-all duration-200
+            shrink-0
+            bg-[#2a2f45]
+            text-[#9ad0ff]
+            hover:bg-[#3a4265]
+            disabled:opacity-50
+          "
+        >
+          <HelpCircle className="w-3 h-3" />
+          {loading ? "Loading..." : "Explain"}
+        </button>
+
+        {/* Run Button */}
+
         <button
           onClick={handleRun}
-          disabled={isRunning && isActiveTerminal}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 shrink-0 ${
-            isRunning && isActiveTerminal
-              ? "bg-[#ffaa00]/20 text-[#ffaa00] cursor-not-allowed"
-              : "bg-[#00ff88]/10 text-[#00ff88] hover:bg-[#00ff88]/20 hover:shadow-[0_0_12px_rgba(0,255,136,0.15)] active:scale-95"
-          }`}
+          disabled={running}
+          className="
+            flex items-center gap-1.5
+            px-3 py-1.5
+            rounded-md
+            text-xs font-semibold
+            transition-all duration-200
+            shrink-0
+            bg-[#00ff88]/10
+            text-[#00ff88]
+            hover:bg-[#00ff88]/20
+            hover:shadow-[0_0_12px_rgba(0,255,136,0.15)]
+            active:scale-95
+            disabled:opacity-50
+          "
         >
-          {isRunning && isActiveTerminal ? (
-            <>
-              <Square className="w-3 h-3" />
-              Running
-            </>
-          ) : (
-            <>
-              <Play className="w-3 h-3" />
-              Run
-            </>
-          )}
+          <Play className="w-3 h-3" />
+          {running ? "Running..." : "Run"}
         </button>
+
       </div>
 
-      {/* Live Terminal */}
-      {shouldShowTerminal && (
-        <TerminalPanel
-          output={terminalOutput}
-          isRunning={isRunning}
-          onInput={onTerminalInput}
-        />
-      )}
+      {/* Explanation Panel */}
 
-      {/* Saved Output After Completion */}
-      {hasCompleted && savedOutput && !shouldShowTerminal && (
-        <div className="mt-1">
-          <button
-            onClick={() => setShowOutput(!showOutput)}
-            className="flex items-center gap-1 text-xs text-[#888899] hover:text-[#00ff88] transition-colors px-2 py-1"
-          >
-            {showOutput ? (
-              <ChevronUp className="w-3 h-3" />
-            ) : (
-              <ChevronDown className="w-3 h-3" />
-            )}
-            {showOutput ? "Hide Output" : "View Output"}
-          </button>
+      <div
+        className={`
+          overflow-hidden
+          transition-all duration-300 ease-in-out
+          ${showExplanation ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
+        `}
+      >
 
-          {showOutput && (
-            <TerminalPanel
-              output={savedOutput}
-              isRunning={false}
-              onInput={onTerminalInput}
-            />
-          )}
-        </div>
-      )}
+        {explanation && (
+
+          <div className="
+            p-3 rounded-lg
+            bg-[#10141f]
+            border border-[#2a2a3e]
+            text-sm
+            text-[#b7f5b1]
+            font-mono
+            leading-relaxed
+          ">
+            {explanation}
+          </div>
+
+        )}
+
+      </div>
+
     </div>
+
   );
+
 }

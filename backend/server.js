@@ -6,15 +6,22 @@ const pty = require("node-pty");
 
 const { generateCommand, explainCommand } = require("./gemini");
 const { detectDistro } = require("./distro");
+const { searchKnowledge } = require("./rag/search");
+const { normalizePrompt } = require("./rag/normalize");
+const { simplifyTask } = require("./rag/simplify");   // NEW
+const { validateCommand } = require("./validator");
+const { updateKnowledge } = require("./rag/updateKnowledge");
+const { planTasks } = require("./planner");
 
 const PORT = 3000;
+
 
 /*
 ---------------------------------------
 HTTP SERVER
 ---------------------------------------
-Handles normal HTTP endpoints
 */
+
 const server = http.createServer(async (req, res) => {
 
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -27,9 +34,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   /*
-  ---------------------------------------
   HEALTH CHECK
-  ---------------------------------------
   */
 
   if (req.url === "/health") {
@@ -44,9 +49,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   /*
-  ---------------------------------------
   EXPLAIN COMMAND
-  ---------------------------------------
   */
 
   if (req.method === "POST" && req.url === "/explain") {
@@ -102,7 +105,6 @@ const server = http.createServer(async (req, res) => {
 ---------------------------------------
 WEBSOCKET SERVER
 ---------------------------------------
-Handles terminal + command generation
 */
 
 const wss = new WebSocket.Server({ server });
@@ -111,10 +113,12 @@ wss.on("connection", (ws) => {
 
   console.log("Client connected");
 
+  let lastUserPrompt = "";
+  let lastNormalizedPrompt = "";
+  let lastDistro = "";
+
   /*
-  ---------------------------------------
-  CREATE PERSISTENT TERMINAL
-  ---------------------------------------
+  CREATE TERMINAL
   */
 
   const shell = pty.spawn("bash", ["-i"], {
@@ -122,15 +126,11 @@ wss.on("connection", (ws) => {
     cols: 140,
     rows: 45,
     cwd: process.cwd(),
-    env: {
-      ...process.env
-    }
+    env: { ...process.env }
   });
 
   /*
-  ---------------------------------------
   STREAM TERMINAL OUTPUT
-  ---------------------------------------
   */
 
   shell.onData((data) => {
@@ -142,10 +142,9 @@ wss.on("connection", (ws) => {
 
   });
 
+
   /*
-  ---------------------------------------
   HANDLE CLIENT MESSAGES
-  ---------------------------------------
   */
 
   ws.on("message", async (message) => {
@@ -158,7 +157,7 @@ wss.on("connection", (ws) => {
 
       /*
       ---------------------------------------
-      GENERATE COMMANDS
+      GENERATE COMMANDS (WITH PLANNER)
       ---------------------------------------
       */
 
@@ -168,15 +167,98 @@ wss.on("connection", (ws) => {
 
           const distro = detectDistro();
 
-          const result = await generateCommand(msg.input, distro);
+          lastUserPrompt = msg.input;
+          lastNormalizedPrompt = normalizePrompt(msg.input);
+          lastDistro = distro;
+
+          /*
+          STEP 1 — PLAN TASKS
+          */
+
+          const tasks = await planTasks(msg.input);
+
+          console.log("Planned tasks:", tasks);
+
+          const steps = [];
+
+          /*
+          STEP 2 — PROCESS TASKS
+          */
+
+          for (const task of tasks) {
+
+            try {
+
+              const normalizedTask = normalizePrompt(task);
+
+              // NEW STEP
+              const simplifiedTask = simplifyTask(normalizedTask);
+
+              console.log("Simplified task:", simplifiedTask);
+
+              /*
+              RAG SEARCH
+              */
+
+              const ragResult = searchKnowledge(simplifiedTask, distro);
+
+              if (ragResult) {
+
+                console.log("RAG HIT:", simplifiedTask);
+
+                steps.push({
+                  task: simplifiedTask,
+                  source: "rag",
+                  commands: ragResult.commands || [],
+                  risk: ragResult.risk || "low"
+                });
+
+                continue;
+              }
+
+              /*
+              GEMINI FALLBACK
+              */
+
+              console.log("Gemini fallback:", simplifiedTask);
+
+              const result = await generateCommand(simplifiedTask, distro);
+
+              steps.push({
+                task: simplifiedTask,
+                source: "gemini",
+                commands: result.commands || [],
+                risk: result.risk || "low"
+              });
+
+            } catch (taskError) {
+
+              console.log("Task generation failed:", task);
+
+              steps.push({
+                task,
+                source: "failed",
+                commands: [],
+                risk: "unknown"
+              });
+
+            }
+
+          }
+
+          /*
+          SEND RESULTS
+          */
 
           ws.send(JSON.stringify({
             type: "generated",
             distro,
-            ...result
+            steps
           }));
 
         } catch (err) {
+
+          console.error("Generation error:", err);
 
           ws.send(JSON.stringify({
             type: "error",
@@ -188,6 +270,7 @@ wss.on("connection", (ws) => {
         return;
       }
 
+
       /*
       ---------------------------------------
       RUN COMMAND
@@ -196,10 +279,39 @@ wss.on("connection", (ws) => {
 
       if (msg.type === "run") {
 
+        const validation = validateCommand(msg.command);
+
+        if (!validation.valid) {
+
+          ws.send(JSON.stringify({
+            type: "error",
+            message: "Command blocked: " + validation.reason
+          }));
+
+          return;
+        }
+
+        /*
+        SELF LEARNING
+        */
+
+        if (lastNormalizedPrompt) {
+
+          updateKnowledge(
+            lastNormalizedPrompt,
+            msg.command,
+            lastDistro,
+            "low"
+          );
+
+          console.log("Knowledge updated:", lastNormalizedPrompt);
+        }
+
         shell.write(msg.command + "\n");
 
         return;
       }
+
 
       /*
       ---------------------------------------
@@ -214,7 +326,9 @@ wss.on("connection", (ws) => {
         return;
       }
 
-    } catch {
+    } catch (err) {
+
+      console.log("Raw terminal input");
 
       shell.write(text);
 
@@ -222,10 +336,9 @@ wss.on("connection", (ws) => {
 
   });
 
+
   /*
-  ---------------------------------------
   CLEANUP
-  ---------------------------------------
   */
 
   ws.on("close", () => {
