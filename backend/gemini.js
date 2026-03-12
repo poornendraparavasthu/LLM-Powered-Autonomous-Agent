@@ -6,13 +6,14 @@ if (!API_KEY) {
   throw new Error("GEMINI_API_KEY is not defined in environment variables");
 }
 
+
 /*
 ---------------------------------------
-GENERATE LINUX COMMANDS
+GEMINI API CALL HELPER
 ---------------------------------------
 */
 
-async function generateCommand(userInput, distro) {
+async function callGemini(prompt) {
 
   try {
 
@@ -21,33 +22,7 @@ async function generateCommand(userInput, distro) {
       {
         contents: [
           {
-            parts: [
-              {
-                text: `
-You are a Linux troubleshooting assistant.
-
-Target distribution: ${distro}
-
-STRICT RULES:
-- Return ONLY valid JSON.
-- No markdown.
-- No explanations.
-- Do not give cd commands.
-- No code blocks.
-- Commands must be compatible with ${distro}.
-- Do not give nano commands, use echo with redirection instead.
-
-Return format:
-{
-  "commands": ["command1", "command2"],
-  "risk": "low | medium | high"
-}
-
-User request or error:
-${userInput}
-`
-              }
-            ]
+            parts: [{ text: prompt }]
           }
         ]
       },
@@ -58,19 +33,85 @@ ${userInput}
       }
     );
 
-    const rawText =
-      response.data.candidates[0].content.parts[0].text.trim();
+    const text =
+      response?.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!text) {
+      throw new Error("Gemini returned empty response");
+    }
+
+    return text.trim();
+
+  } catch (error) {
+
+    console.error(
+      "Gemini API Error:",
+      error.response?.data || error.message
+    );
+
+    throw new Error("Gemini API call failed");
+
+  }
+
+}
+
+
+/*
+---------------------------------------
+GENERATE LINUX COMMANDS (FALLBACK)
+---------------------------------------
+*/
+
+async function generateCommand(userInput, distro) {
+
+  try {
+
+    const prompt = `
+You are a Linux troubleshooting assistant.
+
+Target distribution: ${distro}
+
+STRICT RULES:
+- Return ONLY valid JSON
+- No markdown
+- No explanations
+- No code blocks
+- Do NOT include cd commands
+- Commands must work on ${distro}
+- Do not use nano (use echo with redirection)
+
+Return format:
+{
+  "commands": ["command1", "command2"],
+  "risk": "low | medium | high"
+}
+
+User request:
+${userInput}
+`;
+
+    const rawText = await callGemini(prompt);
 
     let parsed;
 
     try {
-      parsed = JSON.parse(rawText);
+
+      const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+
+      if (!jsonMatch) {
+        throw new Error("No JSON returned from Gemini");
+      }
+
+      parsed = JSON.parse(jsonMatch[0]);
+
     } catch {
-      throw new Error("Gemini did not return valid JSON");
+
+      throw new Error("Gemini returned invalid JSON");
+
     }
 
     if (!Array.isArray(parsed.commands)) {
-      throw new Error("Invalid commands format from Gemini");
+      throw new Error("Invalid commands format");
     }
 
     if (!["low", "medium", "high"].includes(parsed.risk)) {
@@ -82,75 +123,23 @@ ${userInput}
   } catch (error) {
 
     console.error(
-      "Gemini API Error:",
+      "Gemini Command Error:",
       error.response?.data || error.message
     );
 
     throw new Error("Failed to generate command from Gemini");
+
   }
+
 }
 
 
 /*
 ---------------------------------------
-EXPLAIN LINUX COMMAND
+EXPORTS
 ---------------------------------------
 */
 
-async function explainCommand(command) {
-
-  try {
-
-    const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
-      {
-        contents: [
-          {
-            parts: [
-              {
-                text: `
-Explain this Linux command clearly and simply.
-
-Command:
-${command}
-
-Rules:
-- Explain what the command does
-- Explain important flags
-- Keep explanation short
-- 3–5 lines maximum
-- No markdown
-`
-              }
-            ]
-          }
-        ]
-      },
-      {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }
-    );
-
-    const explanation =
-      response.data.candidates[0].content.parts[0].text.trim();
-
-    return explanation;
-
-  } catch (error) {
-
-    console.error(
-      "Gemini Explain Error:",
-      error.response?.data || error.message
-    );
-
-    throw new Error("Failed to generate explanation");
-  }
-
-}
-
 module.exports = {
-  generateCommand,
-  explainCommand
+  generateCommand
 };

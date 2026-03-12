@@ -59,13 +59,13 @@ ${prompt}
     const jsonMatch = raw.match(/\{[\s\S]*\}/);
 
     if (!jsonMatch) {
-      return fallbackPlanner(prompt);
+      return finalizeTasks(fallbackPlanner(prompt));
     }
 
     const parsed = JSON.parse(jsonMatch[0]);
 
     if (!parsed.tasks || !Array.isArray(parsed.tasks)) {
-      return fallbackPlanner(prompt);
+      return finalizeTasks(fallbackPlanner(prompt));
     }
 
     /*
@@ -79,16 +79,16 @@ ${prompt}
       .filter(Boolean);
 
     if (cleanTasks.length === 0) {
-      return fallbackPlanner(prompt);
+      return finalizeTasks(fallbackPlanner(prompt));
     }
 
-    return cleanTasks;
+    return finalizeTasks(cleanTasks);
 
   } catch (err) {
 
     console.log("Planner fallback used");
 
-    return fallbackPlanner(prompt);
+    return finalizeTasks(fallbackPlanner(prompt));
 
   }
 
@@ -116,9 +116,86 @@ function sanitizeTask(task) {
     .replace(/\s+/g, " ")
     .trim();
 
-  if (cleaned.length === 0) return null;
+  if (cleaned.length < 3) return null;
 
   return cleaned;
+
+}
+
+
+/*
+---------------------------------------
+TASK FINALIZER
+---------------------------------------
+Deduplicate + normalize + sort tasks
+*/
+
+function finalizeTasks(tasks) {
+
+  const unique = [...new Set(tasks)];
+
+  const normalized = unique.map(t => normalizeTask(t));
+
+  return sortTasks(normalized);
+
+}
+
+
+/*
+---------------------------------------
+TASK NORMALIZER
+---------------------------------------
+Fix repeated intent patterns
+*/
+
+function normalizeTask(task) {
+
+  const t = task.toLowerCase();
+
+  if (t.includes("install") && t.includes("docker")) return "install docker";
+
+  if (t.includes("start") && t.includes("docker")) return "start docker";
+
+  if (t.includes("enable") && t.includes("docker")) return "enable docker";
+
+  if (t.includes("install") && t.includes("nginx")) return "install nginx";
+
+  if (t.includes("start") && t.includes("nginx")) return "start nginx";
+
+  if (t.includes("enable") && t.includes("nginx")) return "enable nginx";
+
+  if (t.includes("update") || t.includes("upgrade")) return "update system";
+
+  return task;
+
+}
+
+
+/*
+---------------------------------------
+TASK SORTER
+---------------------------------------
+Ensures logical order
+*/
+
+function sortTasks(tasks) {
+
+  const priority = {
+    "update system": 1,
+    "install": 2,
+    "start": 3,
+    "enable": 4,
+    "restart": 5
+  };
+
+  return tasks.sort((a, b) => {
+
+    const aKey = Object.keys(priority).find(k => a.startsWith(k)) || "zzz";
+    const bKey = Object.keys(priority).find(k => b.startsWith(k)) || "zzz";
+
+    return (priority[aKey] || 99) - (priority[bKey] || 99);
+
+  });
 
 }
 
@@ -136,23 +213,25 @@ function fallbackPlanner(prompt) {
 
   const tasks = [];
 
-  if (text.includes("install nginx")) {
-    tasks.push("install nginx");
-    return tasks;
-  }
-
-  if (text.includes("install")) {
-    tasks.push(prompt);
-  }
-
-  if (text.includes("apache")) {
-    tasks.push("install apache");
-    tasks.push("start apache");
+  if (text.includes("update")) {
+    tasks.push("update system");
   }
 
   if (text.includes("docker")) {
     tasks.push("install docker");
     tasks.push("start docker");
+    tasks.push("enable docker");
+  }
+
+  if (text.includes("nginx")) {
+    tasks.push("install nginx");
+    tasks.push("start nginx");
+    tasks.push("enable nginx");
+  }
+
+  if (text.includes("apache")) {
+    tasks.push("install apache");
+    tasks.push("start apache");
   }
 
   if (text.includes("restart")) {
@@ -163,7 +242,7 @@ function fallbackPlanner(prompt) {
     tasks.push(prompt);
   }
 
-  return [...new Set(tasks)];
+  return tasks;
 
 }
 
