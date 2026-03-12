@@ -2462,5 +2462,10 @@
     "ubuntu": "uptime",
     "fedora": "uptime",
     "risk": "low"
+  },
+  {
+    "task": "create file homecrat named hellotxzt",
+    "arch": "echo 'Hello' > ~/.homecrathel.txt",
+    "risk": "low"
   }
 ]
