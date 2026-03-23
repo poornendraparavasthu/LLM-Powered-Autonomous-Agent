@@ -224,6 +224,12 @@ If you like this project, give it a ⭐ on GitHub!
 
 ---
 
-## 👨‍💻 Author
+## 👨‍💻 Authors
 
-Built by **Hari**
+Built by:
+
+* **Murahari** → https://github.com/murahari1
+* **Poornendra** → https://github.com/poornendraparavasthu
+* **Swathi** → https://github.com/Swathimengani
+* **Shrushti** → https://github.com/shrushti405
+
