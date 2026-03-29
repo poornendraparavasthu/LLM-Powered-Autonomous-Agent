@@ -1,8 +1,5 @@
-const tailwindcssAnimate = require("tailwindcss-animate");
-const tailwindcssAspectRatio = require("@tailwindcss/aspect-ratio");
-
 /** @type {import('tailwindcss').Config} */
-export default{
+const config = {
   darkMode: ["class"],
 
   content: [
@@ -15,21 +12,23 @@ export default{
     extend: {
       colors: {
         border: "hsl(var(--border))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: "hsl(var(--bg))",
+        foreground: "hsl(var(--fg))",
 
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "hsl(var(--terminal))",
+          foreground: "hsl(var(--bg))",
         },
 
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "hsl(var(--surface))",
+          foreground: "hsl(var(--fg))",
         },
       },
     },
   },
 
-  plugins: [tailwindcssAnimate, tailwindcssAspectRatio],
+  plugins: [],
 };
+
+export default config;

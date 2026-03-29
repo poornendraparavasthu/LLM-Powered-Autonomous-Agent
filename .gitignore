@@ -4,6 +4,9 @@ npm-debug.log
 
 # environment
 .env
+backend/.env
+frontend/.env
+*.env.local
 
 # logs
 logs

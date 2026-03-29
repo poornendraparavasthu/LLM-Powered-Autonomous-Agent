@@ -62,7 +62,17 @@ echo "Checking Ollama installation..."
 
 if ! command -v ollama >/dev/null 2>&1; then
     echo "Installing Ollama..."
-    curl -fsSL https://ollama.com/install.sh | sh
+    OLLAMA_INSTALLER="$(mktemp /tmp/ollama-install-XXXXXX.sh)"
+    curl -fsSL -o "$OLLAMA_INSTALLER" https://ollama.com/install.sh
+    echo ""
+    echo "Review the installer at $OLLAMA_INSTALLER before proceeding."
+    read -p "Proceed with Ollama installation? [y/N] " CONFIRM_OLLAMA
+    if [ "$CONFIRM_OLLAMA" = "y" ] || [ "$CONFIRM_OLLAMA" = "Y" ]; then
+        bash "$OLLAMA_INSTALLER"
+    else
+        echo "Ollama installation skipped. Install manually from https://ollama.com"
+    fi
+    rm -f "$OLLAMA_INSTALLER"
 else
     echo "Ollama already installed."
 fi
@@ -77,19 +87,32 @@ echo " Gemini API Setup"
 echo "======================================"
 echo ""
 
-read -p "Enter your Gemini API key: " GEMINI_KEY
-
-if [ -z "$GEMINI_KEY" ]; then
-    echo "Gemini API key cannot be empty."
-    exit 1
-fi
+read -p "Enter your Gemini API key (or press Enter to skip): " GEMINI_KEY
 
 echo ""
-echo "Creating backend/.env file..."
+echo "Creating backend/.env file from .env.example..."
 
-echo "GEMINI_API_KEY=$GEMINI_KEY" > backend/.env
+if [ -f backend/.env.example ]; then
+    cp backend/.env.example backend/.env
+else
+    echo "PORT=3000" > backend/.env
+    echo "LLM_PROVIDER=ollama" >> backend/.env
+    echo "OLLAMA_URL=http://127.0.0.1:11434" >> backend/.env
+    echo "OLLAMA_MODEL=mistral" >> backend/.env
+    echo "GEMINI_MODEL=gemini-2.5-flash" >> backend/.env
+    echo "EXECUTION_TIMEOUT_MS=30000" >> backend/.env
+    echo "SESSION_TTL_MS=1800000" >> backend/.env
+    echo "RATE_LIMIT_WINDOW_MS=60000" >> backend/.env
+    echo "RATE_LIMIT_MAX=30" >> backend/.env
+    echo "ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173" >> backend/.env
+fi
 
-echo ".env file created."
+if [ -n "$GEMINI_KEY" ]; then
+    sed -i "s|^GEMINI_API_KEY=.*|GEMINI_API_KEY=$GEMINI_KEY|" backend/.env
+    echo "Gemini API key configured."
+else
+    echo "Skipped Gemini API key. You can add it later in backend/.env"
+fi
 
 echo ""
 echo "======================================"

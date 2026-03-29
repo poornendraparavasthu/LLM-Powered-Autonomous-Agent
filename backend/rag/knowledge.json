@@ -2462,5 +2462,25 @@
     "ubuntu": "uptime",
     "fedora": "uptime",
     "risk": "low"
+  },
+  {
+    "task": "install ngnix",
+    "arch": "sudo pacman -Syu",
+    "risk": "low"
+  },
+  {
+    "task": "install apache",
+    "arch": "sudo pacman -S apache",
+    "risk": "low"
+  },
+  {
+    "task": "install widget",
+    "arch": "sudo pacman -S widget",
+    "risk": "low"
+  },
+  {
+    "task": "clear",
+    "arch": "sudo clear",
+    "risk": "low"
   }
 ]

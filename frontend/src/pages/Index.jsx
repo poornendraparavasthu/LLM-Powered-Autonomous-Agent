@@ -1,293 +1,447 @@
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  Database,
+  MemoryStick,
+  Network,
+  RefreshCw,
+  Search,
+  Settings,
+  Terminal,
+} from "lucide-react";
+import { toast } from "sonner";
 import { useWebSocket } from "@/hooks/useWebSocket";
+import { apiFetch } from "@/lib/api";
+import { getSessionId, resetSessionId } from "@/lib/session";
 import ChatMessage from "@/components/ChatMessage";
 import ChatInput from "@/components/ChatInput";
 import TerminalPanel from "@/components/TerminalPanel";
+import SettingsDrawer from "@/components/frontend-shell/SettingsDrawer";
+import HistoryPanel from "@/components/frontend-shell/HistoryPanel";
+import SetupPanel from "@/components/frontend-shell/SetupPanel";
+import ConfirmModal from "@/components/frontend-shell/ConfirmModal";
 
-let messageIdCounter = 0;
-function generateId() {
-  messageIdCounter += 1;
-  return `msg-${Date.now()}-${messageIdCounter}`;
+function uid() {
+  return `${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
 }
 
-export default function IndexPage() {
+function loadSettings() {
+  try { return JSON.parse(localStorage.getItem("cfg") || "null"); } catch { return null; }
+}
+function saveSettings(s) {
+  try { localStorage.setItem("cfg", JSON.stringify(s)); } catch {}
+}
 
-  const [messages, setMessages] = useState([]);
-  const [terminalOutput, setTerminalOutput] = useState("");
+const QUICK = [
+  { label: "Disk usage",   sub: "df -h",          icon: Database },
+  { label: "Memory info",  sub: "free -h",         icon: MemoryStick },
+  { label: "Open ports",   sub: "ss -tulpn",       icon: Network },
+  { label: "Find large files", sub: "> 100 MB",    icon: Search },
+];
 
-  const scrollRef = useRef(null);
+export default function Index() {
+  const [sessionId,       setSessionId]       = useState(() => getSessionId());
+  const [messages,        setMessages]        = useState([]);
+  const [termOut,         setTermOut]         = useState("");
+  const [termStatus,      setTermStatus]      = useState("connecting");
+  const [focusSig,        setFocusSig]        = useState(0);
+  const [history,         setHistory]         = useState([]);
+  const [setup,           setSetup]           = useState(null);
+  const [models,          setModels]          = useState([]);
+  const [settingsOpen,    setSettingsOpen]    = useState(false);
+  const [pending,         setPending]         = useState(null);
+  const [executing,       setExecuting]       = useState(false);
+  const [settings, setSettings] = useState(() => loadSettings() || {
+    provider: "ollama",
+    model: "mistral",
+    timeout: 30_000,
+  });
 
-  const handleMessage = useCallback((msg) => {
+  const chatRef    = useRef(null);
+  const termRef    = useRef(null);
 
-    switch (msg.type) {
-
-      /*
-      ---------------------------------------
-      GENERATED COMMANDS (NEW STRUCTURE)
-      ---------------------------------------
-      */
-
-      case "generated": {
-
-        const entry = {
-          id: generateId(),
-          role: "ai",
-          content: `Generated ${msg.steps?.length || 0} step${msg.steps?.length > 1 ? "s" : ""} for ${msg.distro}`,
-          timestamp: new Date(),
-          distro: msg.distro,
-          steps: msg.steps || []
-        };
-
-        setMessages(prev => [...prev, entry]);
-        break;
-      }
-
-      /*
-      ---------------------------------------
-      TERMINAL OUTPUT
-      ---------------------------------------
-      */
-
-      case "output": {
-
-        setTerminalOutput(prev => prev + msg.data);
-        break;
-
-      }
-
-      /*
-      ---------------------------------------
-      ERROR MESSAGE
-      ---------------------------------------
-      */
-
-      case "error": {
-
-        const entry = {
-          id: generateId(),
-          role: "error",
-          content: msg.message,
-          timestamp: new Date(),
-        };
-
-        setMessages(prev => [...prev, entry]);
-        break;
-
-      }
-
-      default:
-        break;
-    }
-
+  /* ── helpers ── */
+  const patchMsg = useCallback((messageId, patch) => {
+    setMessages(prev => prev.map(m =>
+      m.role === "assistant" && m.result?.messageId === messageId
+        ? { ...m, result: { ...m.result, ...patch } }
+        : m
+    ));
   }, []);
 
-  const { status, sendMessage } = useWebSocket(handleMessage);
+  /* ── bootstrap ── */
+  const fetchSetup = useCallback(async () => {
+    try {
+      const d = await apiFetch("/api/setup");
+      setSetup(d);
+      setSettings(p => ({ ...p, provider: d.defaultProvider || p.provider }));
+    } catch {}
+  }, []);
+
+  const fetchModels = useCallback(async () => {
+    try {
+      const d = await apiFetch("/api/models");
+      const list = d.models || [];
+      setModels(list);
+      if (!list.length) return;
+      setSettings(p => {
+        const names = list.map(m => m.name);
+        const next = { ...p, model: names.includes(p.model) ? p.model : names[0] };
+        saveSettings(next);
+        return next;
+      });
+    } catch { setModels([]); }
+  }, []);
+
+  const fetchHistory = useCallback(async (sid = sessionId) => {
+    try {
+      const d = await apiFetch(`/api/session/history?sessionId=${sid}`);
+      setHistory(d.history || []);
+    } catch { setHistory([]); }
+  }, [sessionId]);
 
   useEffect(() => {
+    fetchSetup();
+    fetchModels();
+    fetchHistory(sessionId);
+  }, [fetchSetup, fetchModels, fetchHistory, sessionId]);
 
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+  useEffect(() => { saveSettings(settings); }, [settings]);
 
+  /* ── WebSocket ── */
+  const { status, sendTerminalInput, cancelCommand } = useWebSocket({
+    sessionId,
+    onReady:        () => fetchHistory(sessionId),
+    onTerminalReady:(p) => setTermStatus(p?.status || "ready"),
+    onOutput:       (p) => {
+      setTermOut(prev => {
+        const joined = prev + p.data;
+        return joined.length > 50_000 ? joined.slice(-50_000) : joined;
+      });
+    },
+    onExit: (p) => {
+      patchMsg(p.messageId, {
+        status: p.timedOut ? "timed_out" : p.exitCode === 0 ? "completed" : "failed",
+        exitCode: p.exitCode,
+      });
+      fetchHistory(sessionId);
+    },
+    onStatus: (p) => {
+      if (p.messageId) patchMsg(p.messageId, { status: p.status });
+      if (p.status === "awaiting_input") {
+        setFocusSig(n => n + 1);
+        termRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        toast("Sudo password requested — type it in the terminal below.");
+      }
+      fetchHistory(sessionId);
+    },
+    onDiagnosis: (p) => {
+      patchMsg(p.messageId, { diagnosis: p.diagnosis });
+      toast("Failure analysis ready");
+    },
+  });
+
+  /* auto-scroll chat */
+  useEffect(() => {
+    if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight;
   }, [messages]);
 
-  /*
-  ---------------------------------------
-  SEND USER PROMPT
-  ---------------------------------------
-  */
+  /* ── actions ── */
+  const handleSend = useCallback(async (text) => {
+    if (executing) return;
+    if (!settings.model) { toast.error("No model selected."); return; }
+    setExecuting(true);
 
-  const handleSend = useCallback((text) => {
-
-    const userEntry = {
-      id: generateId(),
-      role: "user",
-      content: text,
-      timestamp: new Date(),
-    };
-
-    setMessages(prev => [...prev, userEntry]);
-
-    sendMessage({
-      type: "generate",
-      input: text
-    });
-
-  }, [sendMessage]);
-
-  /*
-  ---------------------------------------
-  RUN COMMAND
-  ---------------------------------------
-  */
-
-  const handleRunCommand = useCallback((command) => {
-
-    sendMessage({
-      type: "run",
-      command
-    });
-
-  }, [sendMessage]);
-
-  /*
-  ---------------------------------------
-  TERMINAL INPUT
-  ---------------------------------------
-  */
-
-  const handleTerminalInput = useCallback((data) => {
-
-    sendMessage({
-      type: "input",
-      data
-    });
-
-  }, [sendMessage]);
-
-  /*
-  ---------------------------------------
-  EXPLAIN COMMAND
-  ---------------------------------------
-  */
-
-  const handleExplainCommand = useCallback(async (command) => {
+    setMessages(p => [...p, { id: uid(), role: "user", content: text, timestamp: new Date() }]);
 
     try {
-
-      const res = await fetch("http://localhost:3000/explain", {
+      const result = await apiFetch("/api/command", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ command })
+        body: JSON.stringify({
+          instruction: text,
+          sessionId,
+          provider: settings.provider,
+          model: settings.model,
+          timeoutMs: settings.timeout,
+        }),
       });
-
-      const data = await res.json();
-
-      return data.explanation;
-
-    } catch {
-
-      return "Failed to generate explanation.";
-
+      setMessages(p => [...p, { id: result.messageId, role: "assistant", content: null, timestamp: new Date(), result }]);
+      fetchHistory(sessionId);
+    } catch (err) {
+      setMessages(p => [...p, { id: uid(), role: "error", content: err.message || "Command generation failed.", timestamp: new Date() }]);
+    } finally {
+      setExecuting(false);
     }
+  }, [executing, settings, sessionId, fetchHistory]);
 
+  const handleRun = useCallback(async (result, confirmed = false) => {
+    if (!result) return;
+    if (result.requiresConfirmation && !confirmed) { setPending(result); return; }
+
+    try {
+      await apiFetch("/api/command/execute", {
+        method: "POST",
+        body: JSON.stringify({ sessionId, messageId: result.messageId, confirmed }),
+      });
+      patchMsg(result.messageId, { status: /\bsudo\b/.test(result.command) ? "awaiting_input" : "running" });
+      setTermOut("");
+      setFocusSig(n => n + 1);
+      termRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      setPending(null);
+      if (/\bsudo\b/.test(result.command)) toast("Started — sudo may prompt for a password in the terminal.");
+      else toast("Running — output streaming to the terminal.");
+      fetchHistory(sessionId);
+    } catch (err) {
+      toast.error(err.message || "Execution failed.");
+    }
+  }, [sessionId, patchMsg, fetchHistory]);
+
+  const handleExplain = useCallback(async (messageId, command) => {
+    try {
+      const d = await apiFetch("/api/explain", { method: "POST", body: JSON.stringify({ command }) });
+      patchMsg(messageId, { explanation: d.explanation });
+      return d.explanation;
+    } catch {
+      toast.error("Explanation unavailable.");
+      return "";
+    }
+  }, [patchMsg]);
+
+  const handleCopy = useCallback(async (v) => {
+    await navigator.clipboard.writeText(v);
+    toast("Copied");
   }, []);
 
+  const handleClearSession = useCallback(async () => {
+    try {
+      await apiFetch("/api/session/clear", { method: "POST", body: JSON.stringify({ sessionId }) });
+      const next = resetSessionId();
+      setSessionId(next);
+      setMessages([]);
+      setHistory([]);
+      setTermOut("");
+      setPending(null);
+      setExecuting(false);
+      toast("Session cleared");
+    } catch (err) {
+      toast.error(err.message || "Failed.");
+    }
+  }, [sessionId]);
+
+  /* keyboard shortcuts */
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT") return;
+      if (e.key === "s" || e.key === "S") setSettingsOpen(v => !v);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  /* derived */
+  const latestAssistant = [...messages].reverse().find(m => m.role === "assistant");
+  const latestCmd       = latestAssistant?.result?.command || "";
+  const isRunning       = ["running", "awaiting_input"].includes(latestAssistant?.result?.status);
+  const showSudoHint    = isRunning && /\bsudo\b/.test(latestCmd);
+
   return (
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "hsl(var(--bg))" }}>
 
-    <div className="h-screen flex bg-[#0a0e17] text-[#d4ffcc]">
+      {/* ── Navbar ────────────────────────────────────────── */}
+      <nav className="navbar">
+        {/* Logo */}
+        <div className="logo-mark">AI</div>
+        <span className="nav-title">Linux AI</span>
+        <div className="nav-divider" />
 
-      {/* LEFT SIDE - CHAT */}
-
-      <div className="w-[60%] flex flex-col border-r border-[#1c2433]">
-
-        {/* Header */}
-
-        <header className="px-6 py-4 border-b border-[#1c2433]">
-
-          <h1 className="text-xl font-bold neon-text">
-            Linux AI Assistant
-          </h1>
-
-        </header>
-
-        {/* Chat Area */}
-
-        <main
-          ref={scrollRef}
-          className="flex-1 overflow-y-auto px-6 py-8"
-        >
-
-          {messages.length === 0 ? (
-
-            <div className="flex flex-col items-center justify-center h-full text-center space-y-8">
-
-              <h2 className="text-3xl font-bold neon-text">
-                Welcome to Linux AI Assistant
-              </h2>
-
-              <p className="max-w-xl text-[#9adf93]">
-                Ask me to help with any Linux task. I will generate commands
-                for your system and you can execute them instantly.
-              </p>
-
-              <div className="flex gap-4 flex-wrap justify-center">
-
-                {[
-                  "Install Docker",
-                  "Check disk usage",
-                  "Setup firewall",
-                  "Find large files"
-                ].map((s) => (
-
-                  <button
-                    key={s}
-                    onClick={() => handleSend(s)}
-                    disabled={status !== "connected"}
-                    className="prompt-suggestion"
-                  >
-                    {s}
-                  </button>
-
-                ))}
-
-              </div>
-
-            </div>
-
-          ) : (
-
-            <div className="space-y-8">
-
-              {messages.map((entry) => (
-
-                <ChatMessage
-                  key={entry.id}
-                  entry={entry}
-                  onRunCommand={handleRunCommand}
-                  onExplainCommand={handleExplainCommand}
-                />
-
-              ))}
-
-            </div>
-
-          )}
-
-        </main>
-
-        {/* Input */}
-
-        <div className="border-t border-[#1c2433]">
-
-          <div className="px-6 py-4">
-
-            <ChatInput
-              onSend={handleSend}
-              connectionStatus={status}
-            />
-
-          </div>
-
+        {/* Connection */}
+        <div className="conn-badge">
+          <span className={`conn-dot ${status}`} />
+          {status === "connected" ? "connected" : status === "connecting" ? "connecting…" : "offline"}
         </div>
 
+        {/* Model chip */}
+        {settings.model && (
+          <span className="chip" style={{ fontFamily: "'Geist Mono', monospace" }}>
+            {settings.model}
+          </span>
+        )}
+
+        {/* Spacer */}
+        <span style={{ flex: 1 }} />
+
+        {/* Buttons */}
+        <button
+          onClick={() => fetchHistory(sessionId)}
+          className="nav-btn nav-btn-icon"
+          title="Refresh history"
+        >
+          <RefreshCw className="h-3.5 w-3.5" />
+        </button>
+
+        <button
+          onClick={() => setSettingsOpen(true)}
+          className="nav-btn nav-btn-icon nav-btn-settings"
+          title="Settings (S)"
+        >
+          <Settings className="h-3.5 w-3.5" />
+        </button>
+      </nav>
+
+      {/* ── Body ──────────────────────────────────────────── */}
+      <div style={{ flex: 1, display: "flex", minHeight: 0, padding: "1rem", gap: "1rem" }}>
+
+        {/* Left: chat + input */}
+        <div style={{
+          flex: 1,
+          minWidth: 0,
+          display: "flex",
+          flexDirection: "column",
+          background: "hsl(var(--surface))",
+          border: "1px solid hsl(var(--line))",
+          borderRadius: "12px",
+          overflow: "hidden",
+        }}>
+          {/* Chat header */}
+          <div className="pane-header">
+            <span className="pane-title">Chat</span>
+            <span className="chip">{messages.length} msg{messages.length !== 1 ? "s" : ""}</span>
+          </div>
+
+          {/* Messages */}
+          <div ref={chatRef} className="chat-area" style={{ flex: 1 }}>
+            {messages.length === 0 ? (
+              <div className="empty-view">
+                <div>
+                  <h2 className="empty-heading">What do you need?</h2>
+                  <p className="empty-sub" style={{ marginTop: "0.5rem" }}>
+                    Describe a Linux task in plain English. Ollama generates the command locally,
+                    validation runs, and you review it before anything executes.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-[0.66rem] font-semibold uppercase tracking-[0.08em] mb-2.5" style={{ color: "hsl(var(--ink-3))" }}>
+                    Quick start
+                  </p>
+                  <div className="quick-grid">
+                    {QUICK.map(({ label, sub, icon: Icon }) => (
+                      <button
+                        key={label}
+                        className="quick-btn"
+                        disabled={status !== "connected"}
+                        onClick={() => handleSend(label)}
+                      >
+                        <span className="quick-btn-icon">
+                          <Icon className="h-3 w-3" />
+                        </span>
+                        <span>
+                          <span className="block text-[0.82rem] font-medium" style={{ color: "hsl(var(--ink))" }}>{label}</span>
+                          <span className="block text-[0.72rem]" style={{ color: "hsl(var(--ink-3))", fontFamily: "'Geist Mono', monospace" }}>{sub}</span>
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              messages.map(m => (
+                <ChatMessage
+                  key={m.id}
+                  entry={m}
+                  onRunCommand={handleRun}
+                  onExplainCommand={handleExplain}
+                  onCopyCommand={handleCopy}
+                />
+              ))
+            )}
+          </div>
+
+          {/* Input */}
+          <ChatInput
+            onSend={handleSend}
+            connectionStatus={status}
+            disabled={executing}
+          />
+        </div>
+
+        {/* Right: sidebar */}
+        <div style={{
+          width: "280px",
+          flexShrink: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+        }}>
+          <SetupPanel setup={setup} />
+          <HistoryPanel entries={history} />
+        </div>
       </div>
 
-      {/* RIGHT SIDE - TERMINAL */}
+      {/* ── Terminal ──────────────────────────────────────── */}
+      <div
+        ref={termRef}
+        style={{
+          margin: "0 1rem 1rem",
+          height: "300px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "0.5rem",
+        }}
+      >
+        {/* Terminal header row */}
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+            <Terminal className="h-3.5 w-3.5" style={{ color: "hsl(var(--ink-3))" }} />
+            <span className="pane-title">Terminal</span>
+          </div>
+          {termStatus && termStatus !== "connecting" && (
+            <span className={`chip ${isRunning ? "chip-blue" : termStatus === "ready" ? "chip-green" : ""}`}>
+              {termStatus}
+            </span>
+          )}
+          {showSudoHint && (
+            <span
+              className="text-[0.75rem] rounded-md px-2.5 py-1"
+              style={{
+                background: "hsl(var(--yellow)/0.08)",
+                border: "1px solid hsl(var(--yellow)/0.2)",
+                color: "hsl(var(--yellow))"
+              }}
+            >
+              sudo — type password in terminal ↓
+            </span>
+          )}
+        </div>
 
-      <div className="w-[40%] bg-black">
-
-        <TerminalPanel
-          output={terminalOutput}
-          onInput={handleTerminalInput}
-        />
-
+        <div style={{ flex: 1, minHeight: 0 }}>
+          <TerminalPanel
+            output={termOut}
+            onInput={sendTerminalInput}
+            status={termStatus}
+            focusSignal={focusSig}
+            onCopyOutput={async () => { await navigator.clipboard.writeText(termOut); toast("Output copied"); }}
+            onCancel={cancelCommand}
+            runningCommand={isRunning ? latestCmd : undefined}
+          />
+        </div>
       </div>
 
+      {/* ── Overlays ──────────────────────────────────────── */}
+      <SettingsDrawer
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        settings={settings}
+        onChange={patch => setSettings(p => ({ ...p, ...patch }))}
+        models={models}
+        onClearSession={handleClearSession}
+      />
+
+      <ConfirmModal
+        open={Boolean(pending)}
+        result={pending}
+        onCancel={() => setPending(null)}
+        onConfirm={() => handleRun(pending, true)}
+      />
     </div>
-
   );
-
 }

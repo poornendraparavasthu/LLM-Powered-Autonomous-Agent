@@ -1,0 +1,410 @@
+[
+  {
+    "id": "fs-root-delete",
+    "pattern": "\\brm\\s+-[A-Za-z]*[rf][A-Za-z]*\\s+/(\\s|$)",
+    "flags": "i",
+    "category": "filesystem-destruction",
+    "riskLevel": "high",
+    "description": "Recursively deleting the filesystem root is destructive."
+  },
+  {
+    "id": "fs-home-delete",
+    "pattern": "\\brm\\s+-[A-Za-z]*[rf][A-Za-z]*\\s+(~|/home)(/|\\s|$)",
+    "flags": "i",
+    "category": "filesystem-destruction",
+    "riskLevel": "high",
+    "description": "Bulk deletion of user home directories is destructive."
+  },
+  {
+    "id": "fs-rm-wild-root",
+    "pattern": "\\brm\\s+-[A-Za-z]*[rf][A-Za-z]*\\s+/\\*",
+    "flags": "i",
+    "category": "filesystem-destruction",
+    "riskLevel": "high",
+    "description": "Wildcard deletion at root is destructive."
+  },
+  {
+    "id": "mkfs-device",
+    "pattern": "\\bmkfs(\\.[a-z0-9]+)?\\b",
+    "flags": "i",
+    "category": "filesystem-destruction",
+    "riskLevel": "high",
+    "description": "Formatting disks can permanently destroy data."
+  },
+  {
+    "id": "dd-device",
+    "pattern": "\\bdd\\b[^\\n]*\\bof=/dev/",
+    "flags": "i",
+    "category": "filesystem-destruction",
+    "riskLevel": "high",
+    "description": "Writing raw data to block devices is dangerous."
+  },
+  {
+    "id": "fork-bomb",
+    "pattern": ":\\s*\\(\\s*\\)\\s*\\{\\s*:\\|:\\s*&\\s*\\};\\s*:",
+    "flags": "i",
+    "category": "process-manipulation",
+    "riskLevel": "high",
+    "description": "Fork bombs can exhaust system resources."
+  },
+  {
+    "id": "shutdown-command",
+    "pattern": "\\bshutdown\\b",
+    "flags": "i",
+    "category": "process-manipulation",
+    "riskLevel": "high",
+    "description": "System shutdown is disruptive."
+  },
+  {
+    "id": "reboot-command",
+    "pattern": "\\breboot\\b",
+    "flags": "i",
+    "category": "process-manipulation",
+    "riskLevel": "high",
+    "description": "System reboot is disruptive."
+  },
+  {
+    "id": "halt-command",
+    "pattern": "\\b(halt|poweroff|init\\s+[06])\\b",
+    "flags": "i",
+    "category": "process-manipulation",
+    "riskLevel": "high",
+    "description": "Power control commands are disruptive."
+  },
+  {
+    "id": "kill-init",
+    "pattern": "\\bkill\\s+-9\\s+1\\b",
+    "flags": "i",
+    "category": "process-manipulation",
+    "riskLevel": "high",
+    "description": "Killing init can crash the system."
+  },
+  {
+    "id": "killall-critical",
+    "pattern": "\\bkillall\\s+(-9\\s+)?(systemd|sshd|init)\\b",
+    "flags": "i",
+    "category": "process-manipulation",
+    "riskLevel": "high",
+    "description": "Stopping critical daemons can destabilize the system."
+  },
+  {
+    "id": "sudo-shell",
+    "pattern": "\\bsudo\\s+(su|bash|sh|zsh)\\b",
+    "flags": "i",
+    "category": "privilege-escalation",
+    "riskLevel": "high",
+    "description": "Opening a privileged shell is unsafe."
+  },
+  {
+    "id": "chmod-rootwide",
+    "pattern": "\\bchmod\\b[^\\n]*\\b777\\b[^\\n]*/(\\s|$)",
+    "flags": "i",
+    "category": "system-configuration",
+    "riskLevel": "high",
+    "description": "Making root-wide paths world-writable is unsafe."
+  },
+  {
+    "id": "chown-rootwide",
+    "pattern": "\\bchown\\b[^\\n]*\\broot\\b[^\\n]*/(\\s|$)",
+    "flags": "i",
+    "category": "system-configuration",
+    "riskLevel": "high",
+    "description": "Changing ownership of root-wide paths is risky."
+  },
+  {
+    "id": "passwd-root",
+    "pattern": "\\bpasswd\\s+root\\b",
+    "flags": "i",
+    "category": "privilege-escalation",
+    "riskLevel": "high",
+    "description": "Changing the root password is privileged."
+  },
+  {
+    "id": "userdel-recursive",
+    "pattern": "\\buserdel\\s+-r\\b",
+    "flags": "i",
+    "category": "system-configuration",
+    "riskLevel": "high",
+    "description": "Removing users recursively can destroy data."
+  },
+  {
+    "id": "groupdel-system",
+    "pattern": "\\bgroupdel\\s+(root|sudo|wheel)\\b",
+    "flags": "i",
+    "category": "system-configuration",
+    "riskLevel": "high",
+    "description": "Deleting system groups is unsafe."
+  },
+  {
+    "id": "passwd-file-edit",
+    "pattern": "(/etc/passwd|/etc/shadow|/etc/sudoers)",
+    "flags": "i",
+    "category": "system-configuration",
+    "riskLevel": "high",
+    "description": "Editing critical auth files is unsafe."
+  },
+  {
+    "id": "curl-pipe-shell",
+    "pattern": "\\bcurl\\b[^\\n]*\\|\\s*(bash|sh|zsh)\\b",
+    "flags": "i",
+    "category": "data-exfiltration",
+    "riskLevel": "high",
+    "description": "Piping remote scripts directly to a shell is unsafe."
+  },
+  {
+    "id": "wget-pipe-shell",
+    "pattern": "\\bwget\\b[^\\n]*\\|\\s*(bash|sh|zsh)\\b",
+    "flags": "i",
+    "category": "data-exfiltration",
+    "riskLevel": "high",
+    "description": "Executing downloaded scripts directly is unsafe."
+  },
+  {
+    "id": "base64-pipe-shell",
+    "pattern": "\\bbase64\\s+-d\\b[^\\n]*\\|\\s*(bash|sh|zsh)\\b",
+    "flags": "i",
+    "category": "data-exfiltration",
+    "riskLevel": "high",
+    "description": "Decoding and executing content hides intent."
+  },
+  {
+    "id": "nc-exec",
+    "pattern": "\\bnc\\b[^\\n]*\\s-e\\s",
+    "flags": "i",
+    "category": "network-recon",
+    "riskLevel": "high",
+    "description": "Netcat command execution is unsafe."
+  },
+  {
+    "id": "reverse-shell-tcp",
+    "pattern": "/dev/tcp/",
+    "flags": "i",
+    "category": "network-recon",
+    "riskLevel": "high",
+    "description": "Reverse shell patterns are unsafe."
+  },
+  {
+    "id": "sshpass-remote",
+    "pattern": "\\bsshpass\\b",
+    "flags": "i",
+    "category": "data-exfiltration",
+    "riskLevel": "high",
+    "description": "Automated password-based remote access is sensitive."
+  },
+  {
+    "id": "scp-bulk",
+    "pattern": "\\bscp\\b[^\\n]*(/etc|/home|\\*)",
+    "flags": "i",
+    "category": "data-exfiltration",
+    "riskLevel": "high",
+    "description": "Bulk remote copy may exfiltrate data."
+  },
+  {
+    "id": "tar-netcat",
+    "pattern": "\\btar\\b[^\\n]*\\|\\s*nc\\b",
+    "flags": "i",
+    "category": "data-exfiltration",
+    "riskLevel": "high",
+    "description": "Streaming archives over the network is sensitive."
+  },
+  {
+    "id": "ufw-disable",
+    "pattern": "\\bufw\\s+disable\\b",
+    "flags": "i",
+    "category": "system-configuration",
+    "riskLevel": "high",
+    "description": "Disabling the firewall reduces system protection."
+  },
+  {
+    "id": "iptables-flush",
+    "pattern": "\\biptables\\s+-F\\b",
+    "flags": "i",
+    "category": "system-configuration",
+    "riskLevel": "high",
+    "description": "Flushing firewall rules is unsafe."
+  },
+  {
+    "id": "modprobe-remove",
+    "pattern": "\\bmodprobe\\s+-r\\b",
+    "flags": "i",
+    "category": "system-configuration",
+    "riskLevel": "high",
+    "description": "Removing kernel modules can destabilize the host."
+  },
+  {
+    "id": "fdisk-command",
+    "pattern": "\\b(fdisk|parted|sfdisk)\\b",
+    "flags": "i",
+    "category": "filesystem-destruction",
+    "riskLevel": "high",
+    "description": "Partition table changes are destructive."
+  },
+  {
+    "id": "mount-device",
+    "pattern": "\\bmount\\b[^\\n]*/dev/",
+    "flags": "i",
+    "category": "system-configuration",
+    "riskLevel": "medium",
+    "description": "Mounting block devices changes system state."
+  },
+  {
+    "id": "docker-prune",
+    "pattern": "\\bdocker\\s+system\\s+prune\\b",
+    "flags": "i",
+    "category": "filesystem-destruction",
+    "riskLevel": "medium",
+    "description": "Pruning Docker can delete images, containers, and volumes."
+  },
+  {
+    "id": "pkg-remove-apt",
+    "pattern": "\\bapt(-get)?\\s+(remove|purge)\\b",
+    "flags": "i",
+    "category": "system-configuration",
+    "riskLevel": "medium",
+    "description": "Package removal changes the runtime environment."
+  },
+  {
+    "id": "pkg-remove-pacman",
+    "pattern": "\\bpacman\\s+-R",
+    "flags": "i",
+    "category": "system-configuration",
+    "riskLevel": "medium",
+    "description": "Package removal changes the runtime environment."
+  },
+  {
+    "id": "pkg-remove-dnf",
+    "pattern": "\\bdnf\\s+remove\\b",
+    "flags": "i",
+    "category": "system-configuration",
+    "riskLevel": "medium",
+    "description": "Package removal changes the runtime environment."
+  },
+  {
+    "id": "systemctl-stop",
+    "pattern": "\\bsystemctl\\s+(stop|disable|restart)\\b",
+    "flags": "i",
+    "category": "process-manipulation",
+    "riskLevel": "medium",
+    "description": "Service state changes should be confirmed."
+  },
+  {
+    "id": "sudo-command",
+    "pattern": "\\bsudo\\b",
+    "flags": "i",
+    "category": "privilege-escalation",
+    "riskLevel": "medium",
+    "description": "Commands that ask for administrator privileges should be reviewed before running."
+  },
+  {
+    "id": "chmod-sensitive-path",
+    "pattern": "\\bchmod\\b[^\\n]*/(etc|usr|var|boot)\\b",
+    "flags": "i",
+    "category": "system-configuration",
+    "riskLevel": "medium",
+    "description": "Changing permissions on sensitive paths should be confirmed."
+  },
+  {
+    "id": "chown-sensitive-path",
+    "pattern": "\\bchown\\b[^\\n]*/(etc|usr|var|boot)\\b",
+    "flags": "i",
+    "category": "system-configuration",
+    "riskLevel": "medium",
+    "description": "Changing ownership on sensitive paths should be confirmed."
+  },
+  {
+    "id": "truncate-file",
+    "pattern": "\\btruncate\\s+-s\\s+0\\b",
+    "flags": "i",
+    "category": "filesystem-destruction",
+    "riskLevel": "medium",
+    "description": "Truncating files can destroy content."
+  },
+  {
+    "id": "find-delete",
+    "pattern": "\\bfind\\b[^\\n]*\\s-delete\\b",
+    "flags": "i",
+    "category": "filesystem-destruction",
+    "riskLevel": "medium",
+    "description": "Deleting from find should be confirmed."
+  },
+  {
+    "id": "mv-system-path",
+    "pattern": "\\bmv\\b[^\\n]*/(etc|usr|var|boot)\\b",
+    "flags": "i",
+    "category": "system-configuration",
+    "riskLevel": "medium",
+    "description": "Moving system paths should be confirmed."
+  },
+  {
+    "id": "cp-system-path",
+    "pattern": "\\bcp\\b[^\\n]*/(etc|usr|var|boot)\\b",
+    "flags": "i",
+    "category": "system-configuration",
+    "riskLevel": "medium",
+    "description": "Copying into system paths should be confirmed."
+  },
+  {
+    "id": "usermod-sudo",
+    "pattern": "\\busermod\\b[^\\n]*\\b(sudo|wheel)\\b",
+    "flags": "i",
+    "category": "privilege-escalation",
+    "riskLevel": "medium",
+    "description": "Changing sudo-capable group membership should be confirmed."
+  },
+  {
+    "id": "groupadd-admin",
+    "pattern": "\\bgroupadd\\s+(sudo|wheel)\\b",
+    "flags": "i",
+    "category": "privilege-escalation",
+    "riskLevel": "medium",
+    "description": "Administrative group changes should be confirmed."
+  },
+  {
+    "id": "nmap-scan",
+    "pattern": "\\bnmap\\b",
+    "flags": "i",
+    "category": "network-recon",
+    "riskLevel": "medium",
+    "description": "Network scanning should be confirmed."
+  },
+  {
+    "id": "tcpdump-sniff",
+    "pattern": "\\btcpdump\\b",
+    "flags": "i",
+    "category": "network-recon",
+    "riskLevel": "medium",
+    "description": "Packet capture should be confirmed."
+  },
+  {
+    "id": "ssh-remote",
+    "pattern": "\\bssh\\s+[^\\n]+@",
+    "flags": "i",
+    "category": "network-recon",
+    "riskLevel": "medium",
+    "description": "Remote access commands should be confirmed."
+  },
+  {
+    "id": "curl-upload",
+    "pattern": "\\bcurl\\b[^\\n]*(-T|--upload-file)\\b",
+    "flags": "i",
+    "category": "data-exfiltration",
+    "riskLevel": "medium",
+    "description": "Uploading files over HTTP should be confirmed."
+  },
+  {
+    "id": "rsync-remote",
+    "pattern": "\\brsync\\b[^\\n]+:",
+    "flags": "i",
+    "category": "data-exfiltration",
+    "riskLevel": "medium",
+    "description": "Remote sync should be confirmed."
+  },
+  {
+    "id": "tee-system-file",
+    "pattern": "\\btee\\b\\s+/etc/",
+    "flags": "i",
+    "category": "system-configuration",
+    "riskLevel": "medium",
+    "description": "Writing directly into /etc should be confirmed."
+  }
+]

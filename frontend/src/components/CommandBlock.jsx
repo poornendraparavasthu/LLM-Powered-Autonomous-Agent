@@ -1,178 +1,172 @@
-import { useState } from "react";
-import { Play, HelpCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { AlertCircle, Check, Clipboard, Info, Loader2, Play, TriangleAlert, X } from "lucide-react";
 
-export default function CommandBlock({ command, onRun, onExplain }) {
+function vchipClass(status) {
+  if (status === "pass")    return "vchip pass";
+  if (status === "confirm") return "vchip confirm";
+  if (status === "fail")    return "vchip fail";
+  return "vchip";
+}
 
-  const [explanation, setExplanation] = useState("");
-  const [showExplanation, setShowExplanation] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [running, setRunning] = useState(false);
+function statusChip(status) {
+  switch (status) {
+    case "completed":     return <span className="chip chip-green"><Check className="h-2.5 w-2.5" />done</span>;
+    case "running":       return <span className="chip chip-blue"><span className="inline-block w-1.5 h-1.5 rounded-full bg-current animate-pulse" />running</span>;
+    case "awaiting_input":return <span className="chip chip-yellow"><span className="inline-block w-1.5 h-1.5 rounded-full bg-current animate-pulse" />waiting</span>;
+    case "failed":        return <span className="chip chip-red"><X className="h-2.5 w-2.5" />failed</span>;
+    case "blocked":       return <span className="chip chip-red"><X className="h-2.5 w-2.5" />blocked</span>;
+    case "timed_out":     return <span className="chip chip-red">timed out</span>;
+    default:              return <span className="chip">ready</span>;
+  }
+}
 
-  /*
-  ---------------------------------------
-  RUN COMMAND
-  ---------------------------------------
-  */
+function riskChip(level) {
+  if (level === "low")    return <span className="chip chip-green">low risk</span>;
+  if (level === "medium") return <span className="chip chip-yellow">med risk</span>;
+  if (level === "high")   return <span className="chip chip-red">high risk</span>;
+  return null;
+}
 
-  const handleRun = () => {
+export default function CommandBlock({ result, onRun, onExplain, onCopy }) {
+  const [explanation, setExplanation] = useState(result.explanation || "");
+  const [showExplain, setShowExplain] = useState(Boolean(result.explanation));
+  const [loadingExplain, setLoadingExplain] = useState(false);
 
-    if (!command || running) return;
-
-    setRunning(true);
-
-    try {
-      onRun(command);
-    } finally {
-      setTimeout(() => setRunning(false), 300);
+  useEffect(() => {
+    if (result.explanation) {
+      setExplanation(result.explanation);
+      setShowExplain(true);
     }
-
-  };
-
-  /*
-  ---------------------------------------
-  EXPLAIN COMMAND
-  ---------------------------------------
-  */
+  }, [result.explanation]);
 
   const handleExplain = async () => {
-
-    if (loading) return;
-
-    // If explanation already exists → toggle
-    if (explanation) {
-      setShowExplanation(prev => !prev);
-      return;
-    }
-
-    setLoading(true);
-
+    if (loadingExplain) return;
+    if (explanation && showExplain) { setShowExplain(false); return; }
+    if (explanation) { setShowExplain(true); return; }
+    setLoadingExplain(true);
     try {
-
-      const result = await onExplain(command);
-
-      setExplanation(result);
-      setShowExplanation(true);
-
-    } catch {
-
-      setExplanation("Failed to generate explanation.");
-      setShowExplanation(true);
-
+      const next = await onExplain?.(result.messageId, result.command);
+      setExplanation(next || "No explanation available.");
+      setShowExplain(true);
+    } finally {
+      setLoadingExplain(false);
     }
-
-    setLoading(false);
   };
 
+  const canRun =
+    result.status !== "running" &&
+    result.status !== "blocked" &&
+    result.status !== "awaiting_input" &&
+    result.status !== "completed";
+
+  const v = result.validation || {};
+
   return (
-
-    <div className="group space-y-2">
-
-      {/* COMMAND ROW */}
-
-      <div className="
-        flex items-center gap-3
-        p-3 rounded-lg
-        bg-[#0a0a0f]
-        border border-[#2a2a3e]
-        hover:border-[#00ff88]/30
-        transition-all duration-200
-      ">
-
-        {/* COMMAND TEXT */}
-
-        <code className="
-          flex-1
-          text-sm
-          font-mono
-          text-[#e0e0e0]
-          break-all
-          select-all
-        ">
-          <span className="text-[#00ff88]/60 mr-2">$</span>
-          {command}
-        </code>
-
-        {/* EXPLAIN BUTTON */}
-
-        <button
-          onClick={handleExplain}
-          disabled={loading}
-          className="
-            flex items-center gap-1.5
-            px-3 py-1.5
-            rounded-md
-            text-xs font-semibold
-            transition-all duration-200
-            shrink-0
-            bg-[#2a2f45]
-            text-[#9ad0ff]
-            hover:bg-[#3a4265]
-            disabled:opacity-50
-          "
-        >
-          <HelpCircle className="w-3 h-3" />
-          {loading ? "Loading..." : "Explain"}
-        </button>
-
-        {/* RUN BUTTON */}
-
-        <button
-          onClick={handleRun}
-          disabled={running}
-          className="
-            flex items-center gap-1.5
-            px-3 py-1.5
-            rounded-md
-            text-xs font-semibold
-            transition-all duration-200
-            shrink-0
-            bg-[#00ff88]/10
-            text-[#00ff88]
-            hover:bg-[#00ff88]/20
-            hover:shadow-[0_0_12px_rgba(0,255,136,0.15)]
-            active:scale-95
-            disabled:opacity-50
-          "
-        >
-          <Play className="w-3 h-3" />
-          {running ? "Running..." : "Run"}
-        </button>
-
+    <div className="cmd-block" data-risk={result.riskLevel}>
+      {/* Command line */}
+      <div className="cmd-code-row">
+        <pre className="cmd-code">
+          <span className="cmd-prompt">$</span>{result.command}
+        </pre>
       </div>
 
-      {/* EXPLANATION PANEL */}
+      {/* Status + validation badges */}
+      <div className="cmd-meta-row">
+        {statusChip(result.status)}
+        {riskChip(result.riskLevel)}
+        {result.provider && (
+          <>
+            <span className="cmd-sep" />
+            <span className="chip">
+              {result.provider === "ollama" ? "local" : result.provider}
+            </span>
+          </>
+        )}
+        <span className="cmd-sep" />
+        <span className={vchipClass(v.syntax?.status)}>
+          <span className="vchip-dot" />syntax
+        </span>
+        <span className={vchipClass(v.blacklist?.status)}>
+          <span className="vchip-dot" />blacklist
+        </span>
+        <span className={vchipClass(v.semantic?.status)}>
+          <span className="vchip-dot" />semantic
+        </span>
+      </div>
 
-      {showExplanation && explanation && (
-
-        <div
-          className="
-            mt-2
-            p-3
-            rounded-lg
-            bg-[#10141f]
-            border border-[#2a2a3e]
-            text-sm
-            text-[#b7f5b1]
-            font-mono
-            leading-relaxed
-            animate-in fade-in duration-200
-          "
-        >
-
-          {/* Label */}
-
-          <div className="text-xs text-[#00ff88] mb-1 font-semibold">
-            AI Explanation
-          </div>
-
-          {explanation}
-
+      {/* Contextual notices */}
+      {result.requiresConfirmation && result.status === "ready" && (
+        <div className="cmd-notice cmd-notice-warn">
+          <TriangleAlert className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
+          <span>Requires confirmation — this command uses elevated privileges. Click <strong>Review & Run</strong> to inspect before running.</span>
         </div>
-
       )}
 
+      {result.status === "blocked" && (
+        <div className="cmd-notice cmd-notice-error">
+          <X className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
+          <span>
+            Blocked by validator.{" "}
+            {v.blacklist?.reason || v.syntax?.reason || "Did not pass safety checks."}
+          </span>
+        </div>
+      )}
+
+      {result.status === "awaiting_input" && (
+        <div className="cmd-notice cmd-notice-info">
+          <Info className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
+          <span>Waiting for input — type your sudo password in the terminal below and press Enter.</span>
+        </div>
+      )}
+
+      {/* Explanation */}
+      {showExplain && explanation && (
+        <div className="cmd-explain-row">
+          <p className="cmd-label">Explanation</p>
+          <p style={{ margin: 0 }}>{explanation}</p>
+        </div>
+      )}
+
+      {/* Alternatives */}
+      {result.alternatives?.length > 0 && (
+        <div className="cmd-alternatives">
+          <p className="cmd-label" style={{ marginTop: "0.6rem" }}>Alternatives</p>
+          {result.alternatives.map((alt) => (
+            <div key={alt} className="cmd-alt-item">{alt}</div>
+          ))}
+        </div>
+      )}
+
+      {/* Diagnosis */}
+      {result.diagnosis && (
+        <div className="cmd-diagnosis">
+          <p className="cmd-label">
+            <AlertCircle className="inline h-3 w-3 mr-1 text-[hsl(var(--red))]" />
+            Failure analysis
+          </p>
+          {result.diagnosis}
+        </div>
+      )}
+
+      {/* Actions */}
+      <div className="cmd-actions-row">
+        <button className="cmd-btn" onClick={() => onCopy?.(result.command)}>
+          <Clipboard className="h-3.5 w-3.5" />
+          Copy
+        </button>
+
+        <button className="cmd-btn" onClick={handleExplain} disabled={loadingExplain}>
+          {loadingExplain
+            ? <Loader2 className="h-3.5 w-3.5 spin" />
+            : <Info className="h-3.5 w-3.5" />}
+          {loadingExplain ? "Loading" : showExplain && explanation ? "Hide" : "Explain"}
+        </button>
+
+        <button className="cmd-btn cmd-btn-run" onClick={() => onRun?.(result)} disabled={!canRun}>
+          <Play className="h-3.5 w-3.5" />
+          {result.requiresConfirmation ? "Review & Run" : "Run"}
+        </button>
+      </div>
     </div>
-
   );
-
 }

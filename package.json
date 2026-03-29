@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "backend": "cd backend && node server.js",
-    "frontend": "cd frontend && npm run dev"
+    "frontend": "cd frontend && npm run dev",
+    "test": "cd backend && npm test"
   }
 }

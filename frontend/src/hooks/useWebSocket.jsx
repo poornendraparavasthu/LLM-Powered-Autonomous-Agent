@@ -1,92 +1,141 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { io } from "socket.io-client";
+import { discoverSocketBase } from "@/lib/runtime";
 
-const WS_URL = "ws://localhost:3000";
-const RECONNECT_DELAY = 3000;
-const MAX_RECONNECT_ATTEMPTS = 10;
-
-export function useWebSocket(onMessage) {
-  const [status, setStatus] = useState("disconnected");
-  const [lastMessage, setLastMessage] = useState(null);
-  const wsRef = useRef(null);
-  const reconnectAttemptsRef = useRef(0);
-  const reconnectTimerRef = useRef(null);
-  const onMessageRef = useRef(onMessage);
-
-  onMessageRef.current = onMessage;
-
-  const connect = useCallback(() => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) return;
-
-    if (wsRef.current) {
-      wsRef.current.onopen = null;
-      wsRef.current.onclose = null;
-      wsRef.current.onmessage = null;
-      wsRef.current.onerror = null;
-      wsRef.current.close();
-    }
-
-    setStatus("connecting");
-
-    try {
-      const ws = new WebSocket(WS_URL);
-      wsRef.current = ws;
-
-      ws.onopen = () => {
-        setStatus("connected");
-        reconnectAttemptsRef.current = 0;
-      };
-
-      ws.onclose = () => {
-        setStatus("disconnected");
-        if (reconnectAttemptsRef.current < MAX_RECONNECT_ATTEMPTS) {
-          reconnectTimerRef.current = setTimeout(() => {
-            reconnectAttemptsRef.current += 1;
-            connect();
-          }, RECONNECT_DELAY);
-        }
-      };
-
-      ws.onerror = () => {};
-
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          setLastMessage(data);
-          onMessageRef.current?.(data);
-        } catch {
-          // Ignore malformed messages
-        }
-      };
-    } catch {
-      setStatus("disconnected");
-    }
-  }, []);
-
-  const sendMessage = useCallback((msg) => {
-  if (wsRef.current?.readyState === WebSocket.OPEN) {
-    wsRef.current.send(JSON.stringify(msg));
-  } else {
-    console.warn("WebSocket not connected");
-  }
-}, []);
-
-  const reconnect = useCallback(() => {
-    reconnectAttemptsRef.current = 0;
-    connect();
-  }, [connect]);
+export function useWebSocket({
+  sessionId,
+  onReady,
+  onTerminalReady,
+  onOutput,
+  onExit,
+  onStatus,
+  onDiagnosis
+}) {
+  const [status, setStatus] = useState("connecting");
+  const [terminalStatus, setTerminalStatus] = useState("connecting");
+  const socketRef = useRef(null);
+  const handlersRef = useRef({
+    onReady,
+    onTerminalReady,
+    onOutput,
+    onExit,
+    onStatus,
+    onDiagnosis
+  });
 
   useEffect(() => {
-    connect();
-    return () => {
-      if (reconnectTimerRef.current) {
-        clearTimeout(reconnectTimerRef.current);
-      }
-      if (wsRef.current) {
-        wsRef.current.onclose = null;
-        wsRef.current.close();
-      }
+    handlersRef.current = {
+      onReady,
+      onTerminalReady,
+      onOutput,
+      onExit,
+      onStatus,
+      onDiagnosis
     };
-  }, [connect]);
+  }, [onDiagnosis, onExit, onOutput, onReady, onStatus, onTerminalReady]);
 
-  return { status, sendMessage, lastMessage, reconnect };
+  useEffect(() => {
+    let active = true;
+    let socket = null;
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 8;
+    let reconnectTimeout;
+
+    function createSocket(base) {
+      return io(base, {
+        transports: ["websocket"],
+        auth: {
+          sessionId
+        },
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        reconnectionAttempts: maxReconnectAttempts
+      });
+    }
+
+    discoverSocketBase()
+      .then((socketBase) => {
+        if (!active) {
+          return;
+        }
+
+        socket = createSocket(socketBase);
+        socketRef.current = socket;
+
+        socket.on("connect", () => {
+          setStatus("connected");
+          reconnectAttempts = 0;
+        });
+
+        socket.on("disconnect", () => {
+          setStatus("disconnected");
+          setTerminalStatus("disconnected");
+        });
+
+        socket.on("connect_error", (error) => {
+          console.error("WebSocket connection error:", error);
+          reconnectAttempts++;
+          if (reconnectAttempts >= maxReconnectAttempts) {
+            setStatus("disconnected");
+          }
+        });
+
+        socket.on("connection:ready", (payload) => {
+          handlersRef.current.onReady?.(payload);
+        });
+
+        socket.on("terminal:ready", (payload) => {
+          const nextStatus = payload?.status || "ready";
+          setTerminalStatus(nextStatus);
+          handlersRef.current.onTerminalReady?.(payload);
+        });
+
+        socket.on("terminal:output", (payload) => {
+          handlersRef.current.onOutput?.(payload);
+        });
+
+        socket.on("terminal:exit", (payload) => {
+          handlersRef.current.onExit?.(payload);
+        });
+
+        socket.on("command:status", (payload) => {
+          handlersRef.current.onStatus?.(payload);
+        });
+
+        socket.on("command:diagnosis", (payload) => {
+          handlersRef.current.onDiagnosis?.(payload);
+        });
+      })
+      .catch(() => {
+        if (!active) {
+          return;
+        }
+
+        setStatus("disconnected");
+        setTerminalStatus("disconnected");
+      });
+
+    return () => {
+      active = false;
+      if (reconnectTimeout) clearTimeout(reconnectTimeout);
+      socket?.disconnect();
+      socketRef.current = null;
+    };
+  }, [sessionId]);
+
+  const sendTerminalInput = useCallback((data) => {
+    socketRef.current?.emit("terminal:input", { data });
+  }, []);
+
+  const cancelCommand = useCallback(() => {
+    socketRef.current?.emit("command:cancel");
+  }, []);
+
+  return {
+    status,
+    terminalStatus,
+    sendTerminalInput,
+    cancelCommand
+  };
 }
