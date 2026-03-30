@@ -79,8 +79,8 @@ class TerminalManager {
 
     const options = {
       name: "xterm-256color",
-      cols: 220,
-      rows: 52,
+      cols: 100,
+      rows: 30,
       cwd: profile.cwd,
       env: {
         TERM: "xterm-256color",
@@ -201,7 +201,7 @@ class TerminalManager {
     return true;
   }
 
-  execute({ sessionId, messageId, command, io, onExit, timeoutMs }) {
+  execute({ sessionId, messageId, command, io, onExit }) {
     const state = this.getSessionState(sessionId);
     this.cancelExecution(sessionId);
 
@@ -213,34 +213,13 @@ class TerminalManager {
     }));
 
     let combinedOutput = "";
-    let timedOut = false;
 
     const appendOutput = chunk => {
       combinedOutput = `${combinedOutput}${chunk}`;
-
-      // Keep only last 8KB to prevent memory bloat on very long outputs
       if (combinedOutput.length > 8_000) {
         combinedOutput = combinedOutput.slice(-8_000);
       }
     };
-
-    const timeout = setTimeout(() => {
-      timedOut = true;
-
-      try {
-        term.kill("SIGTERM");
-      } catch {
-        // ignore
-      }
-
-      setTimeout(() => {
-        try {
-          term.kill("SIGKILL");
-        } catch {
-          // ignore
-        }
-      }, 2_000);
-    }, timeoutMs || this.executionTimeoutMs);
 
     term.onData(chunk => {
       appendOutput(chunk);
@@ -255,7 +234,6 @@ class TerminalManager {
     });
 
     term.onExit(({ exitCode, signal }) => {
-      clearTimeout(timeout);
       output.flush();
 
       const nextState = this.getSessionState(sessionId);
@@ -265,14 +243,12 @@ class TerminalManager {
         messageId,
         exitCode,
         signal,
-        timedOut,
         output: combinedOutput
       });
 
       onExit?.({
         exitCode,
         signal,
-        timedOut,
         output: combinedOutput
       });
     });
@@ -281,6 +257,14 @@ class TerminalManager {
       messageId,
       term
     };
+  }
+
+  resize(sessionId, cols, rows) {
+    const c = Math.max(20, Math.min(500, Math.floor(cols)));
+    const r = Math.max(5,  Math.min(200, Math.floor(rows)));
+    const state = this.getSessionState(sessionId);
+    try { state.shell?.term?.resize(c, r); }     catch { /* ignore */ }
+    try { state.execution?.term?.resize(c, r); } catch { /* ignore */ }
   }
 
   writeInput(sessionId, data) {

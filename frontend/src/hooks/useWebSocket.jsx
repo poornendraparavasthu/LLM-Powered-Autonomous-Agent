@@ -128,6 +128,10 @@ export function useWebSocket({
     socketRef.current?.emit("terminal:input", { data });
   }, []);
 
+  const sendTerminalResize = useCallback((cols, rows) => {
+    socketRef.current?.emit("terminal:resize", { cols, rows });
+  }, []);
+
   const cancelCommand = useCallback(() => {
     socketRef.current?.emit("command:cancel");
   }, []);
@@ -136,6 +140,7 @@ export function useWebSocket({
     status,
     terminalStatus,
     sendTerminalInput,
+    sendTerminalResize,
     cancelCommand
   };
 }

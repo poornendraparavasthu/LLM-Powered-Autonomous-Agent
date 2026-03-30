@@ -341,6 +341,13 @@ function createRuntime(overrides = {}) {
       terminalManager.writeInput(sessionId, payload.data);
     });
 
+    socket.on("terminal:resize", payload => {
+      const cols = Number(payload?.cols);
+      const rows = Number(payload?.rows);
+      if (!Number.isFinite(cols) || !Number.isFinite(rows) || cols < 1 || rows < 1) return;
+      terminalManager.resize(sessionId, cols, rows);
+    });
+
     socket.on("command:cancel", () => {
       if (!checkRateLimit("command:cancel")) {
         socket.emit("error", { message: "Rate limit exceeded" });

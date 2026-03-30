@@ -20,7 +20,7 @@ class CommandProcessor {
     this.systemProfile = systemProfile;
   }
 
-  buildResult({ instruction, generated, validation, timeoutMs }) {
+  buildResult({ instruction, generated, validation }) {
     return {
       messageId: randomUUID(),
       instruction,
@@ -31,7 +31,6 @@ class CommandProcessor {
       provider: generated.provider,
       validation: validation.validation,
       requiresConfirmation: validation.requiresConfirmation,
-      timeoutMs,
       status: validation.valid ? "ready" : "blocked"
     };
   }
@@ -54,7 +53,7 @@ class CommandProcessor {
     };
   }
 
-  async process({ instruction, sessionId, provider, model, timeoutMs }) {
+  async process({ instruction, sessionId, provider, model }) {
     const history = this.sessionManager.getHistory(sessionId);
     let generated = await this.generateWithRareBackup({
       instruction,
@@ -73,8 +72,7 @@ class CommandProcessor {
     const result = this.buildResult({
       instruction,
       generated,
-      validation,
-      timeoutMs
+      validation
     });
 
     this.sessionManager.storeCommand(sessionId, result);
@@ -120,12 +118,11 @@ class CommandProcessor {
       sessionId,
       messageId,
       command: pending.command,
-      timeoutMs: pending.timeoutMs,
       io: this.io,
-      onExit: async ({ exitCode, timedOut, output }) => {
+      onExit: async ({ exitCode, output }) => {
         try {
           const patch = {
-            status: exitCode === 0 ? "completed" : timedOut ? "timed_out" : "failed",
+            status: exitCode === 0 ? "completed" : "failed",
             exitCode
           };
 
@@ -135,9 +132,7 @@ class CommandProcessor {
             const history = this.sessionManager.getHistory(sessionId);
             const diagnosis = await this.llmService.diagnoseFailure({
               command: pending.command,
-              output: timedOut
-                ? `${output || ""}\nProcess exceeded the execution timeout.`.trim()
-                : output,
+              output,
               exitCode,
               history
             });
@@ -145,8 +140,7 @@ class CommandProcessor {
             this.io.to(sessionId).emit("command:diagnosis", {
               messageId,
               diagnosis: diagnosis.diagnosis,
-              provider: diagnosis.provider,
-              timedOut
+              provider: diagnosis.provider
             });
           }
 
@@ -155,8 +149,7 @@ class CommandProcessor {
             sessionId,
             messageId,
             command: pending.command,
-            exitCode,
-            timedOut
+            exitCode
           });
         } catch (error) {
           logError("Execution diagnosis failed", {

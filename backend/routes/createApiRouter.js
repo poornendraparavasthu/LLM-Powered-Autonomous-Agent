@@ -56,7 +56,7 @@ function createApiRouter({ commandProcessor, llmService, sessionManager }) {
   const ALLOWED_PROVIDERS = new Set(["ollama", "gemini"]);
 
   router.post("/command", async (req, res) => {
-    const { instruction, sessionId, provider, model, timeoutMs } = req.body || {};
+    const { instruction, sessionId, provider, model } = req.body || {};
 
     if (!instruction || typeof instruction !== "string" || instruction.trim().length === 0) {
       return res.status(400).json({
@@ -89,8 +89,7 @@ function createApiRouter({ commandProcessor, llmService, sessionManager }) {
         instruction: instruction.trim(),
         sessionId,
         provider: ALLOWED_PROVIDERS.has(provider) ? provider : undefined,
-        model: typeof model === "string" ? model.slice(0, 128) : undefined,
-        timeoutMs: typeof timeoutMs === "number" ? timeoutMs : undefined
+        model: typeof model === "string" ? model.slice(0, 128) : undefined
       });
 
       return res.json(result);

@@ -188,11 +188,6 @@
     padding: 0.35rem;
     border-radius: 6px;
   }
-  .nav-btn-settings:hover {
-    background: hsl(var(--purple) / 0.1);
-    border-color: hsl(var(--purple) / 0.3);
-    color: hsl(var(--purple));
-  }
 
   /* ── Section headers ── */
   .pane-header {
@@ -920,52 +915,6 @@
     flex-shrink: 0;
   }
 
-  /* Range slider */
-  .slider {
-    -webkit-appearance: none;
-    appearance: none;
-    height: 4px;
-    border-radius: 9999px;
-    background: hsl(var(--line-2));
-    outline: none;
-    cursor: pointer;
-  }
-  .slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 14px;
-    height: 14px;
-    border-radius: 9999px;
-    background: hsl(var(--green));
-    border: 2px solid hsl(var(--surface));
-    box-shadow: 0 0 6px hsl(var(--green) / 0.4);
-    cursor: pointer;
-    transition: box-shadow 120ms ease, transform 120ms ease;
-  }
-  .slider::-webkit-slider-thumb:hover {
-    box-shadow: 0 0 10px hsl(var(--green) / 0.5);
-    transform: scale(1.1);
-  }
-  .slider::-moz-range-thumb {
-    width: 14px;
-    height: 14px;
-    border-radius: 9999px;
-    background: hsl(var(--green));
-    border: 2px solid hsl(var(--surface));
-    cursor: pointer;
-  }
-  .slider::-webkit-slider-runnable-track {
-    height: 4px;
-    border-radius: 9999px;
-  }
-
-  /* Danger zone */
-  .drawer-danger-zone {
-    padding: 1rem;
-    border-radius: 10px;
-    border: 1px solid hsl(var(--red) / 0.15);
-    background: hsl(var(--red) / 0.03);
-  }
-
   .danger-btn {
     width: 100%;
     display: inline-flex;
@@ -992,9 +941,8 @@
 
   /* Drawer footer */
   .drawer-footer {
-    padding: 0.75rem 1.1rem;
+    padding: 0.65rem 1.1rem;
     border-top: 1px solid hsl(var(--line));
-    background: hsl(var(--surface-2) / 0.4);
     flex-shrink: 0;
   }
 

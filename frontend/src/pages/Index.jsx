@@ -41,7 +41,7 @@ const QUICK = [
 export default function Index() {
   const [sessionId,       setSessionId]       = useState(() => getSessionId());
   const [messages,        setMessages]        = useState([]);
-  const [termOut,         setTermOut]         = useState("");
+  const termOutRef = useRef(""); // accumulates output for copy — no React state, no re-renders
   const [termStatus,      setTermStatus]      = useState("connecting");
   const [focusSig,        setFocusSig]        = useState(0);
   const [history,         setHistory]         = useState([]);
@@ -53,11 +53,11 @@ export default function Index() {
   const [settings, setSettings] = useState(() => loadSettings() || {
     provider: "ollama",
     model: "mistral",
-    timeout: 30_000,
   });
 
   const chatRef    = useRef(null);
-  const termRef    = useRef(null);
+  const termRef    = useRef(null);   // DOM ref for scrollIntoView
+  const xtermRef   = useRef(null);   // imperative xterm handle (write / clear)
 
   /* ── helpers ── */
   const patchMsg = useCallback((messageId, patch) => {
@@ -108,15 +108,14 @@ export default function Index() {
   useEffect(() => { saveSettings(settings); }, [settings]);
 
   /* ── WebSocket ── */
-  const { status, sendTerminalInput, cancelCommand } = useWebSocket({
+  const { status, sendTerminalInput, sendTerminalResize, cancelCommand } = useWebSocket({
     sessionId,
     onReady:        () => fetchHistory(sessionId),
     onTerminalReady:(p) => setTermStatus(p?.status || "ready"),
     onOutput:       (p) => {
-      setTermOut(prev => {
-        const joined = prev + p.data;
-        return joined.length > 50_000 ? joined.slice(-50_000) : joined;
-      });
+      xtermRef.current?.write(p.data);
+      const next = termOutRef.current + p.data;
+      termOutRef.current = next.length > 50_000 ? next.slice(-50_000) : next;
     },
     onExit: (p) => {
       patchMsg(p.messageId, {
@@ -161,7 +160,7 @@ export default function Index() {
           sessionId,
           provider: settings.provider,
           model: settings.model,
-          timeoutMs: settings.timeout,
+
         }),
       });
       setMessages(p => [...p, { id: result.messageId, role: "assistant", content: null, timestamp: new Date(), result }]);
@@ -183,7 +182,8 @@ export default function Index() {
         body: JSON.stringify({ sessionId, messageId: result.messageId, confirmed }),
       });
       patchMsg(result.messageId, { status: /\bsudo\b/.test(result.command) ? "awaiting_input" : "running" });
-      setTermOut("");
+      termOutRef.current = "";
+      xtermRef.current?.clear();
       setFocusSig(n => n + 1);
       termRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       setPending(null);
@@ -218,7 +218,8 @@ export default function Index() {
       setSessionId(next);
       setMessages([]);
       setHistory([]);
-      setTermOut("");
+      termOutRef.current = "";
+      xtermRef.current?.clear();
       setPending(null);
       setExecuting(false);
       toast("Session cleared");
@@ -280,7 +281,7 @@ export default function Index() {
 
         <button
           onClick={() => setSettingsOpen(true)}
-          className="nav-btn nav-btn-icon nav-btn-settings"
+          className="nav-btn nav-btn-icon"
           title="Settings (S)"
         >
           <Settings className="h-3.5 w-3.5" />
@@ -415,11 +416,12 @@ export default function Index() {
 
         <div style={{ flex: 1, minHeight: 0 }}>
           <TerminalPanel
-            output={termOut}
+            ref={xtermRef}
             onInput={sendTerminalInput}
+            onResize={sendTerminalResize}
             status={termStatus}
             focusSignal={focusSig}
-            onCopyOutput={async () => { await navigator.clipboard.writeText(termOut); toast("Output copied"); }}
+            onCopyOutput={async () => { await navigator.clipboard.writeText(termOutRef.current); toast("Output copied"); }}
             onCancel={cancelCommand}
             runningCommand={isRunning ? latestCmd : undefined}
           />

@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { ChevronDown, Trash2, X } from "lucide-react";
 
 export default function SettingsDrawer({ open, onClose, settings, onChange, models, onClearSession }) {
-  const timeoutSecs = Math.round(settings.timeout / 1000);
 
   useEffect(() => {
     if (!open) return;
@@ -77,32 +76,6 @@ export default function SettingsDrawer({ open, onClose, settings, onChange, mode
                 Ollama not responding — model list unavailable.
               </p>
             )}
-          </div>
-
-          <div className="drawer-divider" />
-
-          {/* Timeout */}
-          <div className="drawer-section">
-            <div className="flex items-center justify-between mb-3">
-              <p className="drawer-section-label" style={{ marginBottom: 0 }}>Timeout</p>
-              <span
-                className="font-mono font-medium"
-                style={{ fontSize: "0.85rem", color: "hsl(var(--ink))" }}
-              >
-                {timeoutSecs}s
-              </span>
-            </div>
-            <input
-              type="range"
-              min="5" max="120" step="5"
-              value={timeoutSecs}
-              onChange={(e) => onChange({ timeout: Number(e.target.value) * 1000 })}
-              className="slider w-full"
-            />
-            <div className="flex justify-between mt-2">
-              <span className="text-[0.63rem]" style={{ color: "hsl(var(--ink-3))" }}>5s</span>
-              <span className="text-[0.63rem]" style={{ color: "hsl(var(--ink-3))" }}>120s</span>
-            </div>
           </div>
 
           <div className="drawer-divider" />

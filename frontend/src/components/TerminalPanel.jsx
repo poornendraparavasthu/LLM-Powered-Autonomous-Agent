@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from "react";
 import { Clipboard, Square, Terminal } from "lucide-react";
 import { Terminal as XTerm } from "@xterm/xterm";
 import { FitAddon } from "@xterm/addon-fit";
@@ -9,12 +9,27 @@ function debounce(fn, ms) {
   return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
 }
 
-export default function TerminalPanel({ output, onInput, status, focusSignal, onCopyOutput, onCancel, runningCommand }) {
+const TerminalPanel = forwardRef(function TerminalPanel(
+  { onInput, onResize, status, focusSignal, onCopyOutput, onCancel, runningCommand },
+  ref
+) {
   const containerRef = useRef(null);
-  const termRef = useRef(null);
-  const fitRef = useRef(null);
-  const lastLenRef = useRef(0);
-  const clickRef = useRef(null);
+  const termRef      = useRef(null);
+  const fitRef       = useRef(null);
+  const clickRef     = useRef(null);
+
+  /* Expose imperative write/clear to parent */
+  useImperativeHandle(ref, () => ({
+    write: (data) => { try { termRef.current?.write(data); } catch {} },
+    clear: () => { try { termRef.current?.clear(); termRef.current?.reset(); } catch {} },
+  }), []);
+
+  const fit = useCallback(() => {
+    try {
+      fitRef.current?.fit();
+      if (termRef.current) onResize?.(termRef.current.cols, termRef.current.rows);
+    } catch {}
+  }, [onResize]);
 
   const init = useCallback(() => {
     if (!containerRef.current || termRef.current) return;
@@ -45,11 +60,20 @@ export default function TerminalPanel({ output, onInput, status, focusSignal, on
       allowProposedApi: true,
     });
 
-    const fit = new FitAddon();
-    term.loadAddon(fit);
+    const fitAddon = new FitAddon();
+    term.loadAddon(fitAddon);
     term.open(containerRef.current);
 
-    requestAnimationFrame(() => { try { fit.fit(); term.focus(); } catch {} });
+    termRef.current = term;
+    fitRef.current  = fitAddon;
+
+    requestAnimationFrame(() => {
+      try {
+        fitAddon.fit();
+        term.focus();
+        onResize?.(term.cols, term.rows);
+      } catch {}
+    });
 
     term.onData((data) => {
       const chunk = 1024;
@@ -63,12 +87,9 @@ export default function TerminalPanel({ output, onInput, status, focusSignal, on
       }
     });
 
-    termRef.current = term;
-    fitRef.current = fit;
-    lastLenRef.current = 0;
     clickRef.current = () => term.focus();
     containerRef.current.addEventListener("click", clickRef.current);
-  }, [onInput]);
+  }, [onInput, onResize]);
 
   useEffect(() => {
     init();
@@ -77,36 +98,20 @@ export default function TerminalPanel({ output, onInput, status, focusSignal, on
       if (node && clickRef.current) node.removeEventListener("click", clickRef.current);
       termRef.current?.dispose();
       termRef.current = null;
-      fitRef.current = null;
-      lastLenRef.current = 0;
+      fitRef.current  = null;
     };
   }, [init]);
 
   useEffect(() => {
-    if (!termRef.current) return;
-    if (output.length < lastLenRef.current) {
-      termRef.current.clear();
-      termRef.current.reset();
-      lastLenRef.current = 0;
-    }
-    const chunk = output.slice(lastLenRef.current);
-    if (chunk) {
-      requestAnimationFrame(() => {
-        try { termRef.current?.write(chunk); lastLenRef.current = output.length; } catch {}
-      });
-    }
-  }, [output]);
-
-  useEffect(() => {
-    const handler = debounce(() => { try { fitRef.current?.fit(); } catch {} }, 150);
+    const handler = debounce(fit, 150);
     window.addEventListener("resize", handler);
     return () => window.removeEventListener("resize", handler);
-  }, []);
+  }, [fit]);
 
   useEffect(() => {
     if (!termRef.current) return;
-    try { fitRef.current?.fit(); termRef.current.focus(); } catch {}
-  }, [focusSignal]);
+    try { fitRef.current?.fit(); termRef.current.focus(); onResize?.(termRef.current.cols, termRef.current.rows); } catch {}
+  }, [focusSignal, onResize]);
 
   const isActive = status === "running" || status === "awaiting input" || status === "awaiting_input";
 
@@ -156,4 +161,6 @@ export default function TerminalPanel({ output, onInput, status, focusSignal, on
       />
     </div>
   );
-}
+});
+
+export default TerminalPanel;

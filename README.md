@@ -1,235 +1,174 @@
-# 🚀 Linux AI Assistant
+# Linux AI Assistant
 
-An **LLM-powered autonomous Linux agent** that can:
-
-* 🧠 Understand natural language
-* ⚙️ Generate Linux commands
-* 📚 Explain commands using local LLM
-* 🖥️ Execute commands in a real terminal
-* 🔁 Learn from previous executions (RAG)
+A browser-based AI agent that translates plain-English instructions into validated Linux shell commands, executes them in a live terminal, and streams output in real time — all powered by a local LLM.
 
 ---
 
-## ✨ Features
+## Overview
 
-* 🔹 **Task Planning (Local LLM - Mistral)**
-* 🔹 **Command Generation (Local LLM + Gemini fallback)**
-* 🔹 **Command Explanation (Local LLM)**
-* 🔹 **Real-time Terminal Execution**
-* 🔹 **Risk Classification (low / medium / high)**
-* 🔹 **RAG-based Knowledge System**
-* 🔹 **WebSocket-powered Interactive UI**
+Type a task in natural language. The assistant generates the exact shell command, explains what it does, assesses its risk level, and asks for confirmation before running anything. Output streams directly into an embedded xterm.js terminal.
+
+**Core design principles:**
+- Commands are generated locally via Ollama — no data leaves your machine by default
+- Gemini is used only as a fallback when Ollama is completely unreachable
+- Nothing executes without your approval; destructive commands require explicit confirmation
+- No arbitrary timeouts — long-running commands (system updates, large downloads) run to completion
 
 ---
 
-## 🧠 Architecture
+## Architecture
 
 ```
-User Prompt
-     ↓
-Planner (Local LLM - Mistral)
-     ↓
-Task Simplifier
-     ↓
-RAG Knowledge Base
-     ↓
-Local LLM Command Generator
-     ↓
-Gemini Fallback (if needed)
-     ↓
-Command Validator
-     ↓
-Execution (PTY Terminal)
+Browser (React 19 + Vite)
+  ├── Chat panel          — natural language input / command review
+  ├── Terminal panel      — xterm.js with live PTY output
+  └── Settings drawer     — model selection, session management
 
-Explain Button
-     ↓
-Local LLM (Ollama)
+Node.js / Express backend
+  ├── LLM Service         — Ollama-first, Gemini fallback
+  ├── Command Processor   — validation pipeline + result store
+  ├── Terminal Manager    — node-pty sessions with resize sync
+  └── WebSocket (Socket.IO) — real-time output + control events
 ```
 
 ---
 
-## 🛠️ Tech Stack
+## Safety Pipeline
 
-* **Frontend**: React + TailwindCSS
-* **Backend**: Node.js + WebSocket
-* **Terminal**: node-pty
-* **LLM (Local)**: Ollama (Mistral)
-* **Fallback LLM**: Google Gemini API
-* **RAG System**: Custom lightweight knowledge store
+Every generated command passes through three stages before you can run it:
+
+1. **Syntax check** — `bash -n` dry-run catches malformed commands
+2. **Regex blacklist** — blocks known destructive patterns (`rm -rf /`, fork bombs, etc.)
+3. **LLM semantic review** — the model rates risk as `low / medium / high` and flags commands that require confirmation
+
+High-risk commands display a red accent and a confirmation modal. You can always cancel.
 
 ---
 
-## ⚡ Installation
+## LLM Provider Strategy
 
-### 1. Clone the repository
+| Condition | Provider used |
+|-----------|---------------|
+| Ollama reachable | Ollama (local, private) |
+| Ollama unreachable | Gemini API (network fallback) |
+
+Configure the Gemini API key in `backend/.env` as `GEMINI_API_KEY`. Ollama must be running locally (`ollama serve`) with at least one model pulled (e.g. `ollama pull mistral`).
+
+---
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- [Ollama](https://ollama.com) installed and running
+- At least one model: `ollama pull mistral`
+
+### Install & run
 
 ```bash
-git clone https://github.com/murahari1/LLM-Powered-Autonomous-Agent
-cd LLM-Powered-Autonomous-Agent
+# Install all dependencies (root, backend, frontend)
+npm run install:all
+
+# Start both backend and frontend
+npm start
 ```
 
----
-
-### 2. Run installer
+Or use the helper scripts:
 
 ```bash
+chmod +x install.sh start.sh
 ./install.sh
-```
-
-This will:
-
-* Install Node.js & dependencies
-* Install Ollama
-* Pull Mistral model
-* Ask for your Gemini API key
-* Create `.env` automatically
-
----
-
-### 3. Start the project
-
-```bash
 ./start.sh
 ```
 
----
+Open http://localhost:5173 in your browser.
 
-## 🌐 Access
-
-* Frontend → http://localhost:5173
-* Backend → http://localhost:3000
+The backend API runs on port **3000**. The frontend dev server runs on port **5173**.
 
 ---
 
-## 💡 Example Prompts
+## Environment Variables
 
-Try these:
+Create `backend/.env`:
+
+```env
+GEMINI_API_KEY=your_key_here   # optional — only used as fallback
+PORT=3000                       # optional, defaults to 3000
+```
+
+---
+
+## Example Prompts
 
 ```
 Install docker
 Check disk usage
 Find large files
 Setup firewall
+Update the system
 ```
 
 ---
 
-## 🖥️ Example Output
+## Project Structure
 
 ```
-Step 1: install docker
-$ sudo pacman -S docker
-
-Step 2: start docker
-$ sudo systemctl start docker
-```
-
-Click **Explain** to get:
-
-```
-This command installs Docker using the pacman package manager.
-
-sudo → runs as administrator  
-pacman → Arch Linux package manager  
--S → install package  
-docker → container engine  
-```
-
----
-
-## 📂 Project Structure
-
-```
-LLM-Powered-Autonomous-Agent/
 ├── backend/
-│   ├── planner.js
-│   ├── gemini.js
-│   ├── server.js
-│   └── rag/
+│   ├── server.js                  # Express + Socket.IO entry point
+│   ├── routes/
+│   │   └── createApiRouter.js     # REST API routes
+│   └── services/
+│       ├── LLMService.js          # Ollama / Gemini abstraction
+│       ├── CommandProcessor.js    # Validation + execution pipeline
+│       ├── TerminalManager.js     # node-pty session management
+│       └── SessionManager.js      # Per-session history
 ├── frontend/
 │   └── src/
+│       ├── pages/Index.jsx        # Main application page
+│       ├── components/
+│       │   ├── ChatMessage.jsx
+│       │   ├── ChatInput.jsx
+│       │   ├── CommandBlock.jsx
+│       │   ├── TerminalPanel.jsx
+│       │   └── frontend-shell/
+│       │       ├── SettingsDrawer.jsx
+│       │       ├── HistoryPanel.jsx
+│       │       ├── SetupPanel.jsx
+│       │       └── ConfirmModal.jsx
+│       ├── hooks/useWebSocket.jsx
+│       ├── lib/
+│       │   ├── api.js
+│       │   └── session.js
+│       └── index.css
+├── Linux-AI-Assistant.pdf         # Project documentation
 ├── install.sh
 ├── start.sh
-└── README.md
+└── package.json
 ```
 
 ---
 
-## 🔐 Environment Variables
+## Keyboard Shortcuts
 
-Created automatically:
-
-```
-backend/.env
-```
-
-```
-GEMINI_API_KEY=your_api_key
-```
+| Key | Action |
+|-----|--------|
+| `S` | Toggle settings drawer |
+| `Esc` | Close settings drawer |
 
 ---
 
-## 🧩 Key Components
-
-### 🔹 Planner
-
-Breaks user input into tasks using local LLM
-
-### 🔹 Command Generator
-
-* Local LLM first
-* Gemini fallback
-
-### 🔹 RAG System
-
-Stores and reuses known commands
-
-### 🔹 Validator
-
-Prevents dangerous commands
-
-### 🔹 Terminal
-
-Executes commands in real-time
-
----
-
-## 🚀 Future Improvements
-
-* 🔁 Automatic error fixing (self-healing agent)
-* 🧠 Memory-based reasoning
-* 🐳 Docker support
-* 📊 Command history analytics
-* 🌍 Multi-distro optimization
-
----
-
-## 🤝 Contributing
-
-Pull requests are welcome.
-
-If you have ideas to improve the agent, feel free to contribute.
-
----
-
-## 📜 License
-
-MIT License
-
----
-
-## ⭐ Support
-
-If you like this project, give it a ⭐ on GitHub!
-
----
-
-## 👨‍💻 Authors
+## Authors
 
 Built by:
 
-* **Murahari** → https://github.com/murahari1
-* **Poornendra** → https://github.com/poornendraparavasthu
-* **Swathi** → https://github.com/Swathimengani
-* **Shrushti** → https://github.com/shrushti405
+- **Murahari** → https://github.com/murahari1
+- **Poornendra** → https://github.com/poornendraparavasthu
+- **Swathi** → https://github.com/Swathimengani
+- **Shrushti** → https://github.com/shrushti405
 
+---
+
+## License
+
+MIT
