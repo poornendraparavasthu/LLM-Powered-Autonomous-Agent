@@ -1,147 +1,231 @@
-# Linux AI Assistant
+<div align="center">
 
-A browser-based AI agent that translates plain-English instructions into validated Linux shell commands, executes them in a live terminal, and streams output in real time — all powered by a local LLM.
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:0d1117,40:0a3d62,70:1a1a2e,100:0d1117&height=220&section=header&text=Linux%20AI%20Assistant&fontSize=55&fontColor=00d4ff&animation=fadeIn&fontAlignY=40&desc=LLM-Powered%20Autonomous%20Agent&descAlignY=62&descSize=20&descColor=8892b0"/>
+
+<br/>
+
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=700&size=20&duration=2500&pause=800&color=00D4FF&center=true&vCenter=true&random=false&width=700&height=60&lines=Natural+Language+%E2%86%92+Shell+Command;Local+LLM+%7C+Zero+data+leaves+your+machine;Real-time+PTY+Terminal+via+xterm.js;3-Stage+Safety+Validation+Pipeline;Ollama-first+%7C+Gemini+fallback)](https://git.io/typing-svg)
+
+<br/>
+
+[![Stars](https://img.shields.io/github/stars/murahari1/LLM-Powered-Autonomous-Agent?style=for-the-badge&logo=starship&logoColor=gold&color=gold&labelColor=0d1117)](https://github.com/murahari1/LLM-Powered-Autonomous-Agent/stargazers)
+[![Forks](https://img.shields.io/github/forks/murahari1/LLM-Powered-Autonomous-Agent?style=for-the-badge&logo=git&logoColor=orange&color=orange&labelColor=0d1117)](https://github.com/murahari1/LLM-Powered-Autonomous-Agent/network)
+[![Issues](https://img.shields.io/github/issues/murahari1/LLM-Powered-Autonomous-Agent?style=for-the-badge&logo=github&logoColor=red&color=red&labelColor=0d1117)](https://github.com/murahari1/LLM-Powered-Autonomous-Agent/issues)
+[![License](https://img.shields.io/badge/License-MIT-58a6ff?style=for-the-badge&labelColor=0d1117)](https://github.com/murahari1/LLM-Powered-Autonomous-Agent/blob/main/LICENSE)
+
+</div>
 
 ---
 
-## Overview
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:0d1117,100:0a3d62&height=2&section=header"/>
 
-Type a task in natural language. The assistant generates the exact shell command, explains what it does, assesses its risk level, and asks for confirmation before running anything. Output streams directly into an embedded xterm.js terminal.
+## ⚡ What is this?
 
-**Core design principles:**
-- Commands are generated locally via Ollama — no data leaves your machine by default
-- Gemini is used only as a fallback when Ollama is completely unreachable
-- Nothing executes without your approval; destructive commands require explicit confirmation
-- No arbitrary timeouts — long-running commands (system updates, large downloads) run to completion
+<div align="center">
 
----
+> Type a task in **plain English**. The agent figures out the exact Linux command, explains what it does, flags the risk level, asks for your confirmation — then runs it in a **live terminal** right in your browser.
 
-## Architecture
+</div>
 
 ```
-Browser (React 19 + Vite)
-  ├── Chat panel          — natural language input / command review
-  ├── Terminal panel      — xterm.js with live PTY output
-  └── Settings drawer     — model selection, session management
-
-Node.js / Express backend
-  ├── LLM Service         — Ollama-first, Gemini fallback
-  ├── Command Processor   — validation pipeline + result store
-  ├── Terminal Manager    — node-pty sessions with resize sync
-  └── WebSocket (Socket.IO) — real-time output + control events
+  You: "update my system and clean package cache"
+   ↓
+  🧠  LLM generates:  sudo pacman -Syu && sudo pacman -Sc
+   ↓
+  🛡️  3-stage validation: syntax ✓ | blacklist ✓ | semantic ✓
+   ↓
+  ✅  You confirm
+   ↓
+  🖥️  Runs live in xterm.js PTY terminal — output streams in real time
 ```
 
 ---
 
-## Safety Pipeline
+## 🚀 Tech Stack
 
-Every generated command passes through three stages before you can run it:
+<div align="center">
 
-1. **Syntax check** — `bash -n` dry-run catches malformed commands
-2. **Regex blacklist** — blocks known destructive patterns (`rm -rf /`, fork bombs, etc.)
-3. **LLM semantic review** — the model rates risk as `low / medium / high` and flags commands that require confirmation
+[![My Skills](https://skillicons.dev/icons?i=react,nodejs,express,vite,tailwind&theme=dark&perline=5)](https://skillicons.dev)
 
-High-risk commands display a red accent and a confirmation modal. You can always cancel.
+| Layer | Tech |
+|-------|------|
+| **Frontend** | React 19 + Vite + xterm.js |
+| **Backend** | Node.js + Express + Socket.IO |
+| **Terminal** | node-pty (real PTY sessions) |
+| **Local LLM** | Ollama (Mistral / any model) |
+| **Fallback LLM** | Google Gemini API |
+| **Fonts** | Geist + JetBrains Mono |
 
----
-
-## LLM Provider Strategy
-
-| Condition | Provider used |
-|-----------|---------------|
-| Ollama reachable | Ollama (local, private) |
-| Ollama unreachable | Gemini API (network fallback) |
-
-Configure the Gemini API key in `backend/.env` as `GEMINI_API_KEY`. Ollama must be running locally (`ollama serve`) with at least one model pulled (e.g. `ollama pull mistral`).
+</div>
 
 ---
 
-## Quick Start
+## 🧠 Architecture
+
+<div align="center">
+
+```
+┌─────────────────────────────────────────────────────┐
+│                   Browser (React 19)                 │
+│  ┌──────────────┐  ┌─────────────┐  ┌─────────────┐ │
+│  │  Chat Panel  │  │  Terminal   │  │  Settings   │ │
+│  │  (commands)  │  │  (xterm.js) │  │  (drawer)   │ │
+│  └──────┬───────┘  └──────┬──────┘  └─────────────┘ │
+└─────────┼────────────────-┼───────────────────────────┘
+          │   Socket.IO     │   WebSocket
+┌─────────▼─────────────────▼───────────────────────────┐
+│               Node.js / Express Backend                 │
+│  ┌────────────┐  ┌─────────────┐  ┌─────────────────┐ │
+│  │ LLM Service│  │  Terminal   │  │    Command      │ │
+│  │ (Ollama ↓  │  │  Manager   │  │    Processor    │ │
+│  │  Gemini)   │  │ (node-pty) │  │  (validation)  │ │
+│  └─────┬──────┘  └─────────────┘  └─────────────────┘ │
+└────────┼──────────────────────────────────────────────-┘
+         │
+    ┌────▼─────┐    ┌─────────────┐
+    │  Ollama  │ or │   Gemini    │
+    │  (local) │    │   (cloud)   │
+    └──────────┘    └─────────────┘
+```
+
+</div>
+
+---
+
+## 🛡️ 3-Stage Safety Pipeline
+
+Every command is validated before you can even click run:
+
+```
+Command String
+      │
+      ▼
+┌─────────────────┐
+│  1. Syntax Check │  bash -n (dry run — catches malformed commands)
+└────────┬────────┘
+         │ ✓
+         ▼
+┌─────────────────┐
+│  2. Blacklist   │  regex (rm -rf /, fork bombs, disk wipes...)
+└────────┬────────┘
+         │ ✓
+         ▼
+┌─────────────────┐
+│  3. LLM Semantic│  rates: low / medium / high risk
+└────────┬────────┘
+         │
+         ▼
+   🟢 low  →  run directly
+   🟡 medium  →  show warning
+   🔴 high  →  confirmation modal required
+```
+
+---
+
+## ⚙️ Quick Start
 
 ### Prerequisites
 
-- Node.js 18+
-- [Ollama](https://ollama.com) installed and running
-- At least one model: `ollama pull mistral`
+```bash
+# Node.js 18+
+node --version
+
+# Ollama running with a model
+ollama serve
+ollama pull mistral
+```
 
 ### Install & run
 
 ```bash
-# Install all dependencies (root, backend, frontend)
-npm run install:all
+git clone https://github.com/murahari1/LLM-Powered-Autonomous-Agent
+cd LLM-Powered-Autonomous-Agent
 
-# Start both backend and frontend
-npm start
-```
-
-Or use the helper scripts:
-
-```bash
-chmod +x install.sh start.sh
+# One-command setup
 ./install.sh
+
+# Start everything
 ./start.sh
 ```
 
-Open http://localhost:5173 in your browser.
+Or manually:
 
-The backend API runs on port **3000**. The frontend dev server runs on port **5173**.
+```bash
+npm run install:all
+npm start
+```
+
+Open **http://localhost:5173** — backend runs on **:3000**
 
 ---
 
-## Environment Variables
+## 🔐 Environment Variables
 
-Create `backend/.env`:
-
-```env
-GEMINI_API_KEY=your_key_here   # optional — only used as fallback
-PORT=3000                       # optional, defaults to 3000
+```bash
+# backend/.env
+GEMINI_API_KEY=your_key_here   # optional — fallback only
+PORT=3000
 ```
+
+Gemini is **never called** while Ollama is reachable. It's purely a network fallback.
 
 ---
 
-## Example Prompts
+## 💡 Example Prompts
 
-```
-Install docker
-Check disk usage
-Find large files
-Setup firewall
-Update the system
-```
+<div align="center">
+
+| Prompt | What happens |
+|--------|-------------|
+| `update my system` | Runs `sudo pacman -Syu` — streams full output live |
+| `show disk usage` | Runs `df -h` — displays instantly |
+| `install docker` | High-risk → confirmation modal appears |
+| `find files larger than 1GB` | Safe, runs immediately |
+| `check what's listening on port 3000` | `ss -tlnp \| grep 3000` |
+
+</div>
 
 ---
 
-## Project Structure
+## ⌨️ Keyboard Shortcuts
+
+<div align="center">
+
+| Key | Action |
+|-----|--------|
+| `S` | Toggle settings drawer |
+| `Esc` | Close settings drawer |
+| `Enter` | Send message |
+
+</div>
+
+---
+
+## 📂 Project Structure
 
 ```
+LLM-Powered-Autonomous-Agent/
 ├── backend/
-│   ├── server.js                  # Express + Socket.IO entry point
-│   ├── routes/
-│   │   └── createApiRouter.js     # REST API routes
+│   ├── server.js                     ← Express + Socket.IO
+│   ├── routes/createApiRouter.js     ← REST API
 │   └── services/
-│       ├── LLMService.js          # Ollama / Gemini abstraction
-│       ├── CommandProcessor.js    # Validation + execution pipeline
-│       ├── TerminalManager.js     # node-pty session management
-│       └── SessionManager.js      # Per-session history
+│       ├── LLMService.js             ← Ollama / Gemini abstraction
+│       ├── CommandProcessor.js       ← Validation + execution
+│       ├── TerminalManager.js        ← node-pty sessions
+│       ├── CommandValidator.js       ← 3-stage pipeline
+│       └── SessionManager.js        ← Per-session history
 ├── frontend/
 │   └── src/
-│       ├── pages/Index.jsx        # Main application page
+│       ├── pages/Index.jsx           ← Main app
 │       ├── components/
-│       │   ├── ChatMessage.jsx
-│       │   ├── ChatInput.jsx
-│       │   ├── CommandBlock.jsx
-│       │   ├── TerminalPanel.jsx
+│       │   ├── CommandBlock.jsx      ← Command cards w/ risk colors
+│       │   ├── TerminalPanel.jsx     ← xterm.js + PTY resize sync
 │       │   └── frontend-shell/
 │       │       ├── SettingsDrawer.jsx
-│       │       ├── HistoryPanel.jsx
-│       │       ├── SetupPanel.jsx
-│       │       └── ConfirmModal.jsx
-│       ├── hooks/useWebSocket.jsx
-│       ├── lib/
-│       │   ├── api.js
-│       │   └── session.js
-│       └── index.css
-├── Linux-AI-Assistant.pdf         # Project documentation
+│       │       ├── ConfirmModal.jsx
+│       │       └── HistoryPanel.jsx
+│       └── hooks/useWebSocket.jsx   ← Socket.IO hook
+├── Linux-AI-Assistant.pdf            ← Project docs
 ├── install.sh
 ├── start.sh
 └── package.json
@@ -149,26 +233,27 @@ Update the system
 
 ---
 
-## Keyboard Shortcuts
+## 👨‍💻 Authors
 
-| Key | Action |
-|-----|--------|
-| `S` | Toggle settings drawer |
-| `Esc` | Close settings drawer |
+<div align="center">
 
----
+| | Name | GitHub |
+|-|------|--------|
+| 🧑‍💻 | **Murahari** | [@murahari1](https://github.com/murahari1) |
+| 🧑‍💻 | **Poornendra** | [@poornendraparavasthu](https://github.com/poornendraparavasthu) |
+| 🧑‍💻 | **Swathi** | [@Swathimengani](https://github.com/Swathimengani) |
+| 🧑‍💻 | **Shrushti** | [@shrushti405](https://github.com/shrushti405) |
 
-## Authors
-
-Built by:
-
-- **Murahari** → https://github.com/murahari1
-- **Poornendra** → https://github.com/poornendraparavasthu
-- **Swathi** → https://github.com/Swathimengani
-- **Shrushti** → https://github.com/shrushti405
+</div>
 
 ---
 
-## License
+<div align="center">
 
-MIT
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:0d1117,40:0a3d62,70:1a1a2e,100:0d1117&height=120&section=footer"/>
+
+**MIT License** · Built with Node.js, React, Ollama, and xterm.js
+
+⭐ Star this repo if it helped you!
+
+</div>
